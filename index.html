@@ -1,399 +1,82 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="OneNation S.V.G. — Caribbean-rooted streetwear. One people. One culture. One nation.">
 <title>OneNation S.V.G. | Wear Your Identity</title>
 <style>
-:root{--ink:#080b10;--panel:#111821;--paper:#f7f5ed;--muted:#b2bac4;--gold:#f4c542;--blue:#167bd0;--green:#20984f;--line:rgba(255,255,255,.14)}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--ink);color:var(--paper);font-family:Arial,Helvetica,sans-serif}a{color:inherit;text-decoration:none}.topline{height:5px;background:linear-gradient(90deg,var(--gold) 0 25%,var(--green) 25% 50%,var(--blue) 50% 75%,#e5c93b 75%)}header{height:78px;padding:0 6vw;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(8,11,16,.94);backdrop-filter:blur(12px);z-index:5}.brand{font-weight:950;letter-spacing:-1.2px;font-size:22px}.brand span{color:var(--gold)}nav{display:flex;gap:28px;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#d5d8d3}nav a:hover{color:var(--gold)}.nav-cta{border:1px solid var(--gold);padding:12px 17px;color:var(--gold)}
-.hero{min-height:680px;padding:76px 8vw;display:grid;grid-template-columns:.9fr 1.1fr;align-items:center;gap:5vw;overflow:hidden;background:radial-gradient(ellipse at 80% 40%,rgba(22,123,208,.22),transparent 42%),linear-gradient(130deg,#080b10,#111b20)}.eyebrow{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);font-weight:bold}.hero h1{font-size:clamp(56px,7.6vw,104px);line-height:.88;letter-spacing:-6px;margin:22px 0}.hero h1 em{font-style:normal;color:var(--gold)}.hero p{font-size:16px;line-height:1.75;color:#c1c7c1;max-width:470px}.actions{display:flex;gap:13px;margin-top:30px;flex-wrap:wrap}.btn{padding:16px 22px;font-size:10px;font-weight:bold;letter-spacing:1.5px;text-transform:uppercase;display:inline-block}.btn-gold{background:var(--gold);color:#10120e}.btn-outline{border:1px solid #87919a}.hero-photo{height:min(620px,68vw);min-height:420px;position:relative;overflow:hidden;border:1px solid rgba(244,197,66,.45);box-shadow:0 25px 70px #0009}.hero-photo img{width:100%;height:100%;object-fit:cover;object-position:center 28%;display:block}.photo-caption{position:absolute;bottom:0;left:0;right:0;padding:42px 22px 20px;background:linear-gradient(transparent,rgba(0,0,0,.85));font-weight:900;letter-spacing:2px;font-size:12px}.photo-caption span{display:block;color:var(--gold);font-size:10px;font-weight:500;margin-top:6px;letter-spacing:2px}
-.ticker{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:17px 0;overflow:hidden;white-space:nowrap;color:var(--gold);font-weight:900;letter-spacing:3px;font-size:13px}.ticker span{padding:0 28px}.section{padding:88px 8vw}.section-head{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:35px}.section h2{font-size:clamp(35px,5vw,60px);letter-spacing:-3px;margin:12px 0 0}.section-intro{max-width:370px;color:var(--muted);line-height:1.7;font-size:14px}.products{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.product{background:var(--panel);border:1px solid var(--line);padding:12px;min-width:0}.product-visual{height:390px;background:#17212a;overflow:hidden}.product-visual img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}.product:hover .product-visual img{transform:scale(1.035)}.product-info{padding:17px 4px 7px;display:flex;justify-content:space-between;gap:12px}.product-info h3{margin:0 0 7px;font-size:15px}.product-info p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}.tag{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);border:1px solid rgba(244,197,66,.5);padding:7px 9px;height:max-content;white-space:nowrap}
-.lookbook{background:#0d141b}.lookbook-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.look{height:560px;position:relative;overflow:hidden;border:1px solid var(--line)}.look img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s}.look:hover img{transform:scale(1.03)}.look-label{position:absolute;left:0;right:0;bottom:0;padding:40px 22px 20px;background:linear-gradient(transparent,#000c);font-weight:900;letter-spacing:2px}.look-label small{display:block;color:var(--gold);font-size:10px;font-weight:500;margin-top:7px}.story{background:#111821;display:grid;grid-template-columns:1fr 1fr;gap:7vw;align-items:center}.story-mark{min-height:430px;overflow:hidden;border:1px solid var(--line)}.story-mark img{width:100%;height:100%;min-height:430px;object-fit:cover;display:block}.story-copy p{color:#b8c0c9;line-height:1.8;font-size:14px}.values{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px}.value{border-top:2px solid var(--green);padding-top:14px}.value:nth-child(2){border-color:var(--gold)}.value:nth-child(3){border-color:var(--blue)}.value b{display:block;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}.value span{color:var(--muted);font-size:12px;line-height:1.5}.cta{padding:90px 8vw;text-align:center;background:linear-gradient(120deg,rgba(32,152,79,.15),rgba(22,123,208,.16)),#0d1117}.cta h2{font-size:clamp(40px,7vw,76px);letter-spacing:-4px;margin:15px auto;max-width:850px}.cta p{color:var(--muted);margin:0 auto 28px;max-width:510px;line-height:1.7}footer{padding:28px 8vw;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;color:var(--muted);font-size:11px;letter-spacing:1px}footer strong{color:var(--paper)}
-
-.order-panel{background:#111821;border:1px solid var(--line);padding:28px;margin-top:34px;display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:center}.price{font-size:clamp(30px,4vw,46px);font-weight:900;color:var(--gold);letter-spacing:-2px;margin:8px 0}.order-panel p,.order-panel li{color:var(--muted);font-size:13px;line-height:1.7}.order-panel ol{padding-left:19px}.contact-links{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}.contact-links a{border:1px solid var(--gold);padding:13px 16px;color:var(--gold);font-size:10px;font-weight:bold;letter-spacing:1px;text-transform:uppercase}.contact-links a.primary{background:var(--gold);color:#10120e}.contact-note{color:var(--muted);font-size:12px;line-height:1.6;margin-top:15px}
-@media(max-width:650px){.order-panel{grid-template-columns:1fr;padding:22px}}
-
-@media(max-width:850px){.hero{grid-template-columns:1fr;padding:65px 7vw 55px}.hero-photo{height:650px;min-height:0}.products{grid-template-columns:1fr 1fr}.product-visual{height:360px}.story{grid-template-columns:1fr}.story-mark,.story-mark img{min-height:360px}.look{height:480px}}
-@media(max-width:560px){header{height:68px;padding:0 5vw}.brand{font-size:18px}nav{gap:10px}nav a:not(.nav-cta){display:none}.nav-cta{padding:10px 12px}.hero{padding:58px 6vw 45px}.hero h1{letter-spacing:-4px}.hero-photo{height:520px}.section{padding:65px 6vw}.section-head{display:block}.section-intro{margin-top:16px}.products,.lookbook-grid{grid-template-columns:1fr}.product-visual{height:430px}.look{height:530px}.values{gap:12px}.value b{font-size:10px}.cta{padding:70px 6vw}footer{padding:24px 6vw}}
-
-.new-drop{background:linear-gradient(145deg,#101923,#080b10)}
-.new-drop .section-intro{max-width:440px}
-.drop-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
-.drop-card{background:#111821;border:1px solid var(--line);padding:12px;min-width:0}
-.drop-card img{width:100%;height:360px;object-fit:contain;background:#f8f8f8;display:block}
-.drop-card.wide{grid-column:span 2}
-.drop-card.wide img{object-fit:cover}
-.drop-card figcaption{padding:14px 4px 4px}
-.drop-card h3{font-size:14px;margin:0 0 6px}
-.drop-card p{font-size:12px;line-height:1.5;color:var(--muted);margin:0}
-.drop-note{margin-top:22px;padding:16px 18px;border-left:3px solid var(--gold);background:#111821;color:#c7ced5;font-size:13px;line-height:1.7}
-@media(max-width:850px){.drop-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.drop-card img{height:330px}}
-@media(max-width:560px){.drop-grid{grid-template-columns:1fr}.drop-card.wide{grid-column:span 1}.drop-card img{height:390px}}
-
-
-.js-filters{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 22px}.js-filters button,.drop-card figcaption button{background:transparent;color:var(--gold);border:1px solid var(--gold);padding:10px 14px;cursor:pointer;font-weight:bold}.js-filters button[aria-pressed="true"]{background:var(--gold);color:#10120e}.drop-card img{cursor:zoom-in}.drop-card[hidden]{display:none!important}.image-viewer{position:fixed;inset:0;background:#000e;z-index:20;display:none;align-items:center;justify-content:center;padding:22px}.image-viewer.open{display:flex}.image-viewer img{max-width:min(92vw,900px);max-height:82vh;object-fit:contain}.image-viewer button{position:absolute;top:18px;right:22px;background:var(--gold);border:0;padding:12px 16px;font-weight:bold;cursor:pointer}.drop-card figcaption button{margin-top:10px;font-size:10px;letter-spacing:1px}.mobile-menu-toggle{display:none}@media(max-width:560px){.mobile-menu-toggle{display:block;background:transparent;border:1px solid var(--gold);color:var(--gold);padding:9px 12px}header nav.menu-open{display:flex;position:absolute;top:68px;left:0;right:0;background:#080b10;padding:20px;flex-direction:column;align-items:flex-start;z-index:10}header nav.menu-open a{display:block!important}}
-
-.holiday-drop{background:linear-gradient(145deg,#15100d,#080b10)}
-.holiday-intro{display:grid;grid-template-columns:1.15fr .85fr;gap:24px;align-items:stretch;margin-bottom:30px}
-.holiday-intro img{width:100%;height:420px;object-fit:cover;display:block;border:1px solid var(--line)}
-.holiday-intro>div{border:1px solid var(--line);background:#111821;padding:30px;display:flex;flex-direction:column;justify-content:center}
-.holiday-intro h3{font-size:clamp(28px,4vw,48px);letter-spacing:-2px;margin:12px 0}
-.holiday-intro p{color:var(--muted);line-height:1.75;font-size:13px}
-.holiday-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
-.holiday-card{margin:0;background:#111821;border:1px solid var(--line);padding:12px;min-width:0}
-.holiday-card img{width:100%;height:380px;object-fit:cover;display:block;cursor:zoom-in}
-.holiday-card figcaption{padding:14px 4px 4px}
-.holiday-card h3{font-size:14px;margin:0 0 6px}
-.holiday-card p{font-size:12px;line-height:1.5;color:var(--muted);margin:0}
-.holiday-card button{margin-top:10px;background:transparent;color:var(--gold);border:1px solid var(--gold);padding:10px 14px;cursor:pointer;font-weight:bold;font-size:10px;letter-spacing:1px}
-@media(max-width:1000px){.holiday-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:850px){.holiday-intro{grid-template-columns:1fr}.holiday-intro img{height:360px}.holiday-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:560px){.holiday-intro img{height:300px}.holiday-intro>div{padding:22px}.holiday-grid{grid-template-columns:1fr}.holiday-card img{height:430px}}
-
-/* Women's SVG Pride Collection */
-.womens-collection{background:linear-gradient(145deg,#111a22,#080b10)}
-.womens-collection .section-intro{max-width:520px}
-.womens-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
-.womens-card{margin:0;background:#111821;border:1px solid var(--line);padding:12px;min-width:0}
-.womens-card img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block;border:1px solid var(--line);cursor:zoom-in}
-.womens-card figcaption{padding:14px 4px 4px}
-.womens-card h3{font-size:14px;margin:0 0 6px}
-.womens-card p{font-size:12px;line-height:1.5;color:var(--muted);margin:0}
-.womens-card button{margin-top:10px;background:transparent;color:var(--gold);border:1px solid var(--gold);padding:10px 14px;cursor:pointer;font-weight:bold;font-size:10px;letter-spacing:1px}
-@media(max-width:1000px){.womens-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:560px){.womens-grid{grid-template-columns:1fr}.womens-card img{aspect-ratio:1/1}}
-
+:root{--ink:#070a0e;--panel:#111821;--paper:#f7f5ed;--muted:#aeb8c3;--gold:#f4c542;--blue:#167bd0;--green:#20984f;--line:rgba(255,255,255,.14)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--ink);color:var(--paper);font-family:Arial,Helvetica,sans-serif}a{color:inherit;text-decoration:none}.topline{height:5px;background:linear-gradient(90deg,var(--gold) 0 25%,var(--green) 25% 50%,var(--blue) 50% 75%,var(--gold) 75%)}
+header{height:76px;padding:0 6vw;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(7,10,14,.95);backdrop-filter:blur(12px);z-index:10}.brand{font-weight:950;letter-spacing:-1px;font-size:21px}.brand span{color:var(--gold)}nav{display:flex;gap:24px;font-size:10px;text-transform:uppercase;letter-spacing:1.4px;color:#d9dde1}.nav-cta{border:1px solid var(--gold);padding:11px 15px;color:var(--gold)}
+.mobile{display:none;background:transparent;border:1px solid var(--gold);color:var(--gold);padding:9px 12px}
+.hero{min-height:680px;padding:75px 8vw;display:grid;grid-template-columns:.9fr 1.1fr;align-items:center;gap:5vw;background:radial-gradient(ellipse at 80% 40%,rgba(22,123,208,.24),transparent 42%),linear-gradient(130deg,#070a0e,#111b20)}.eyebrow{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);font-weight:bold}.hero h1{font-size:clamp(54px,7.5vw,102px);line-height:.88;letter-spacing:-6px;margin:20px 0}.hero h1 em{font-style:normal;color:var(--gold)}.hero p{font-size:16px;line-height:1.75;color:#c3c9cf;max-width:480px}.actions{display:flex;gap:12px;margin-top:28px;flex-wrap:wrap}.btn{padding:15px 21px;font-size:10px;font-weight:bold;letter-spacing:1.4px;text-transform:uppercase;display:inline-block}.btn-gold{background:var(--gold);color:#10120e}.btn-outline{border:1px solid #7e8994}
+.visual{min-height:500px;position:relative;overflow:hidden;border:1px solid rgba(244,197,66,.45);background:linear-gradient(145deg,#0e2330 0%,#081017 48%,#152d20 100%);box-shadow:0 25px 70px #0009}.island{position:absolute;width:42%;height:52%;left:28%;top:20%;background:linear-gradient(145deg,#238d54,#0e4e32);clip-path:polygon(45% 0,63% 8%,57% 20%,75% 31%,65% 44%,83% 55%,68% 67%,73% 83%,53% 100%,38% 88%,22% 91%,29% 72%,13% 62%,25% 48%,15% 35%,33% 25%,27% 11%);filter:drop-shadow(0 0 35px rgba(244,197,66,.35))}.compass{position:absolute;left:10%;top:10%;width:90px;height:90px;border:2px solid var(--gold);border-radius:50%;display:grid;place-items:center;color:var(--gold);font-size:12px;font-weight:900}.compass:before{content:"N  •  E  •  S  •  W";position:absolute;width:170px;text-align:center;font-size:8px;letter-spacing:3px}.visual-logo{position:absolute;left:0;right:0;bottom:55px;text-align:center;font-size:clamp(34px,6vw,78px);font-weight:950;letter-spacing:-4px;color:var(--gold);text-shadow:0 4px 25px #000}.visual-sub{position:absolute;left:0;right:0;bottom:32px;text-align:center;letter-spacing:4px;font-size:10px}.flag{position:absolute;left:-10%;right:-10%;bottom:0;height:16px;background:linear-gradient(90deg,var(--blue) 0 33%,#e9cf43 33% 66%,var(--green) 66%)}.ticker{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:16px 0;overflow:hidden;white-space:nowrap;color:var(--gold);font-weight:900;letter-spacing:3px;font-size:12px}.ticker span{padding:0 26px}
+.section{padding:85px 8vw}.section-head{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:32px}.section h2{font-size:clamp(34px,5vw,59px);letter-spacing:-3px;margin:12px 0 0}.section-intro{max-width:430px;color:var(--muted);line-height:1.7;font-size:14px}
+.products{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.product{background:var(--panel);border:1px solid var(--line);padding:13px}.product-art{height:360px;display:grid;place-items:center;position:relative;overflow:hidden;background:radial-gradient(circle at 50% 35%,#1b2b3a,#0c1118 68%)}.tee{width:58%;height:68%;position:relative;background:linear-gradient(135deg,#121212,#292929);clip-path:polygon(26% 0,39% 8%,61% 8%,74% 0,100% 24%,83% 42%,73% 30%,73% 100%,27% 100%,27% 30%,17% 42%,0 24%);box-shadow:0 15px 40px #0008}.tee.blue{background:linear-gradient(135deg,#1259a3,#1f87df)}.tee.white{background:linear-gradient(135deg,#f4f4f1,#c9ced3)}.print{position:absolute;left:24%;right:24%;top:28%;height:31%;display:grid;place-items:center;text-align:center;border:2px solid rgba(244,197,66,.65);color:var(--gold);font-weight:950;font-size:clamp(12px,2vw,24px);letter-spacing:-1px;line-height:.9}.print small{display:block;font-size:6px;letter-spacing:2px;margin-top:6px}.product-info{padding:16px 4px 6px;display:flex;justify-content:space-between;gap:12px}.product-info h3{margin:0 0 6px;font-size:15px}.product-info p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}.tag{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);border:1px solid rgba(244,197,66,.5);padding:7px 9px;height:max-content;white-space:nowrap}
+.order{background:#0d141b}.order-panel{background:var(--panel);border:1px solid var(--line);padding:28px;display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center}.price{font-size:clamp(42px,7vw,76px);font-weight:950;letter-spacing:-4px;color:var(--gold);margin:8px 0}.order-panel p,.order-panel li{color:var(--muted);font-size:13px;line-height:1.7}.order-panel ol{padding-left:20px}.contact{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}.contact a{border:1px solid var(--gold);padding:14px 17px;color:var(--gold);font-size:10px;font-weight:bold;letter-spacing:1px;text-transform:uppercase}.contact .primary{background:var(--gold);color:#10120e}
+.lookbook{background:#0b1118}.looks{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.look{min-height:430px;border:1px solid var(--line);position:relative;overflow:hidden;background:linear-gradient(145deg,#102331,#0d151d)}.look:nth-child(2){background:linear-gradient(145deg,#17230f,#0d1711)}.look:nth-child(3){background:linear-gradient(145deg,#241c0e,#0d1117)}.look .person{position:absolute;left:25%;right:25%;bottom:0;height:78%;background:linear-gradient(160deg,#1e2730,#0b0f13);clip-path:polygon(34% 0,66% 0,77% 19%,100% 36%,88% 49%,76% 40%,79% 100%,21% 100%,24% 40%,12% 49%,0 36%,23% 19%)}.look:nth-child(2) .person{background:linear-gradient(160deg,#194f7d,#10151a)}.look:nth-child(3) .person{background:linear-gradient(160deg,#6c4a1d,#17130d)}.look-label{position:absolute;left:0;right:0;bottom:0;padding:55px 20px 20px;background:linear-gradient(transparent,#000d);font-weight:900;letter-spacing:2px}.look-label small{display:block;color:var(--gold);font-size:9px;font-weight:500;margin-top:7px}
+.story{background:#111821;display:grid;grid-template-columns:1fr 1fr;gap:7vw;align-items:center}.brand-art{min-height:430px;border:1px solid var(--line);display:grid;place-items:center;position:relative;overflow:hidden;background:radial-gradient(circle,#183449,#080c11 65%)}.brand-art:before{content:"";position:absolute;width:65%;aspect-ratio:1;border:2px solid var(--gold);border-radius:50%;box-shadow:0 0 70px rgba(244,197,66,.22)}.brand-art strong{position:relative;z-index:1;font-size:clamp(45px,7vw,90px);letter-spacing:-5px;color:var(--gold)}.brand-art span{position:absolute;z-index:1;top:61%;font-size:10px;letter-spacing:4px}.story-copy p{color:#b8c0c9;line-height:1.8;font-size:14px}.values{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:28px}.value{border-top:2px solid var(--green);padding-top:13px}.value:nth-child(2){border-color:var(--gold)}.value:nth-child(3){border-color:var(--blue)}.value b{display:block;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px}.value span{color:var(--muted);font-size:12px}
+.cta{padding:88px 8vw;text-align:center;background:linear-gradient(120deg,rgba(32,152,79,.15),rgba(22,123,208,.16)),#0d1117}.cta h2{font-size:clamp(40px,7vw,76px);letter-spacing:-4px;margin:15px auto;max-width:850px}.cta p{color:var(--muted);margin:0 auto 25px;max-width:560px;line-height:1.7}.contact.center{justify-content:center}
+footer{padding:27px 8vw;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;color:var(--muted);font-size:10px;letter-spacing:1px}footer strong{color:var(--paper)}
+@media(max-width:850px){nav{display:none}.mobile{display:block}.hero{grid-template-columns:1fr;padding:60px 7vw}.visual{min-height:460px}.products,.looks{grid-template-columns:1fr 1fr}.story{grid-template-columns:1fr}.order-panel{grid-template-columns:1fr}}
+@media(max-width:560px){header{height:68px;padding:0 5vw}.brand{font-size:18px}.hero{padding:52px 6vw 45px}.hero h1{letter-spacing:-4px}.visual{min-height:420px}.section{padding:62px 6vw}.section-head{display:block}.section-intro{margin-top:15px}.products,.looks{grid-template-columns:1fr}.product-art{height:400px}.look{min-height:500px}.values{gap:10px}.value b{font-size:9px}.order-panel{padding:22px}.cta{padding:68px 6vw}footer{padding:23px 6vw}}
 </style>
-<script>function loadScript(a){var b=document.getElementsByTagName("head")[0],c=document.createElement("script");c.type="text/javascript",c.src="https://tracker.metricool.com/resources/be.js",c.onreadystatechange=a,c.onload=a,b.appendChild(c)}loadScript(function(){beTracker.t({hash:"63a510b3a028336e809a45097ebfbf59"})});</script>
+<script>
+function loadScript(a){var b=document.getElementsByTagName("head")[0],c=document.createElement("script");c.type="text/javascript",c.src="https://tracker.metricool.com/resources/be.js",c.onreadystatechange=a,c.onload=a,b.appendChild(c)}loadScript(function(){beTracker.t({hash:"63a510b3a028336e809a45097ebfbf59"})});
+</script>
 </head>
 <body>
 <div class="topline"></div>
-<header><a class="brand" href="#home">ONE<span>NATION</span> S.V.G.</a><button class="mobile-menu-toggle" type="button" aria-expanded="false" aria-label="Toggle navigation">Menu</button><nav><a href="#shop">Shop</a><a href="#new-drop">New drop</a><a href="#womens">Women</a><a href="mens-collection.html">Men</a><a href="#holiday">Holiday</a><a href="#lookbook">Lookbook</a><a href="#story">Our story</a><a href="#contact" class="nav-cta">Get in touch</a></nav></header>
+<header>
+<a class="brand" href="#home">ONE<span>NATION</span> S.V.G.</a>
+<button class="mobile" id="menu" aria-expanded="false">Menu</button>
+<nav id="nav">
+<a href="#shop">Shop</a><a href="#ordering">How to order</a><a href="#lookbook">Lookbook</a><a href="#story">Our story</a><a href="#contact" class="nav-cta">Get in touch</a>
+</nav>
+</header>
 <main>
-<section class="hero" id="home"><div><div class="eyebrow">Rooted in SVG · Made to represent</div><h1>WEAR YOUR<br><em>IDENTITY.</em></h1><p>More than clothing. A statement of culture, pride and unity. OneNation S.V.G. brings the spirit of Saint Vincent and the Grenadines to everyday streetwear.</p><div class="actions"><a class="btn btn-gold" href="#shop">Explore the collection</a><a class="btn btn-outline" href="#story">Discover our story</a></div></div><div class="hero-photo"><img src="assets/onenation-mens-look.jpg" alt="OneNation S.V.G. graphic T-shirt styled in a men's streetwear look"><div class="photo-caption">ONE PEOPLE. ONE CULTURE. ONE NATION.<span>THE SVG PRIDE COLLECTION</span></div></div></section>
+<section class="hero" id="home">
+<div><div class="eyebrow">Rooted in SVG · Made to represent</div><h1>WEAR YOUR<br><em>IDENTITY.</em></h1><p>More than clothing. A statement of culture, pride and unity. OneNation S.V.G. brings the spirit of Saint Vincent and the Grenadines to everyday streetwear.</p><div class="actions"><a class="btn btn-gold" href="#shop">Explore the collection</a><a class="btn btn-outline" href="#story">Discover our story</a></div></div>
+<div class="visual" aria-label="OneNation S.V.G. brand visual"><div class="compass">✦</div><div class="island"></div><div class="visual-logo">ONSVG</div><div class="visual-sub">ONE NATIONS.VG · UNITY · CULTURE · PROGRESS</div><div class="flag"></div></div>
+</section>
 <div class="ticker"><span>ONE PEOPLE ✦ ONE CULTURE ✦ ONE NATION ✦</span><span>ONE PEOPLE ✦ ONE CULTURE ✦ ONE NATION ✦</span></div>
-<section class="section" id="shop"><div class="section-head"><div><div class="eyebrow">The collection</div><h2>REPRESENT<br>WHERE YOU'RE FROM.</h2></div><p class="section-intro">A first look at the OneNation S.V.G. collection. Bold island-inspired artwork, made to wear with pride.</p></div><div class="products">
-<article class="product"><div class="product-visual"><img src="assets/onenation-signature-tee.jpg" alt="Black OneNation S.V.G. signature graphic T-shirt"></div><div class="product-info"><div><h3>SVG Heritage Signature Tee</h3><p>Black tee · Island artwork · Signature graphic</p></div><span class="tag">Featured</span></div></article>
-<article class="product"><div class="product-visual"><img src="assets/onenation-womens-look-1.jpg" alt="Woman wearing the OneNation S.V.G. graphic T-shirt"></div><div class="product-info"><div><h3>OneNation Street Look</h3><p>Everyday style · Caribbean identity</p></div><span class="tag">Lookbook</span></div></article>
-<article class="product"><div class="product-visual"><img src="assets/onenation-womens-look-2.jpg" alt="Second women's OneNation S.V.G. streetwear look"></div><div class="product-info"><div><h3>Island Pride Look</h3><p>Bold colour · Made to represent</p></div><span class="tag">Lookbook</span></div></article>
-</div></section>
 
-<section class="section new-drop" id="new-drop">
-  <div class="section-head">
-    <div><div class="eyebrow">Fresh designs · OneNation S.V.G.</div><h2>THE NEW<br>SVG PRIDE DROP.</h2></div>
-    <p class="section-intro">Explore the latest OneNation S.V.G. graphic tees in black and blue, featuring bold island-inspired artwork and a collection lineup.</p>
-  </div>
-  <div class="js-filters" aria-label="Filter designs"><button type="button" data-filter="all" aria-pressed="true">All designs</button><button type="button" data-filter="black" aria-pressed="false">Black</button><button type="button" data-filter="blue" aria-pressed="false">Royal blue</button></div>
-  <div class="drop-grid">
-    <figure class="drop-card" data-color="black"><img tabindex="0" role="button" aria-label="Enlarge black front 1" src="assets/onenation-black-front-1.webp" alt="Black OneNation S.V.G. graphic T-shirt, front view"><figcaption><h3>Black Edition</h3><p>Signature island artwork on a black tee</p><button type="button" class="choose-design" data-design="Black Edition">Choose this design</button></figcaption></figure>
-    <figure class="drop-card" data-color="black"><img tabindex="0" role="button" aria-label="Enlarge black front 2" src="assets/onenation-black-front-2.webp" alt="Black OneNation S.V.G. graphic T-shirt variation"><figcaption><h3>Black Edition · Style 2</h3><p>OneNation S.V.G. statement graphic</p><button type="button" class="choose-design" data-design="Black Edition · Style 2">Choose this design</button></figcaption></figure>
-    <figure class="drop-card" data-color="black"><img tabindex="0" role="button" aria-label="Enlarge black front 3" src="assets/onenation-black-front-3.webp" alt="Black OneNation S.V.G. graphic T-shirt variation"><figcaption><h3>Black Edition · Style 3</h3><p>Caribbean sunset and island-inspired artwork</p><button type="button" class="choose-design" data-design="Black Edition · Style 3">Choose this design</button></figcaption></figure>
-    <figure class="drop-card" data-color="black"><img tabindex="0" role="button" aria-label="Enlarge black front 4" src="assets/onenation-black-front-4.webp" alt="Black OneNation S.V.G. graphic T-shirt variation"><figcaption><h3>Black Edition · Style 4</h3><p>Bold full-colour OneNation design</p><button type="button" class="choose-design" data-design="Black Edition · Style 4">Choose this design</button></figcaption></figure>
-    <figure class="drop-card" data-color="black"><img tabindex="0" role="button" aria-label="Enlarge black large print" src="assets/onenation-black-large-print.webp" alt="Black T-shirt featuring large OneNation S.V.G. front print"><figcaption><h3>Black Edition · Large Print</h3><p>Oversized graphic look</p><button type="button" class="choose-design" data-design="Black Edition · Large Print">Choose this design</button></figcaption></figure>
-    <figure class="drop-card" data-color="blue"><img tabindex="0" role="button" aria-label="Enlarge blue front 1" src="assets/onenation-blue-front-1.webp" alt="Royal blue OneNation S.V.G. graphic T-shirt"><figcaption><h3>Royal Blue Edition</h3><p>Bright blue tee with colourful SVG artwork</p><button type="button" class="choose-design" data-design="Royal Blue Edition">Choose this design</button></figcaption></figure>
-    <figure class="drop-card" data-color="blue"><img tabindex="0" role="button" aria-label="Enlarge blue front 2" src="assets/onenation-blue-front-2.webp" alt="Royal blue OneNation S.V.G. graphic T-shirt variation"><figcaption><h3>Royal Blue Edition · Style 2</h3><p>OneNation S.V.G. island pride graphic</p><button type="button" class="choose-design" data-design="Royal Blue Edition · Style 2">Choose this design</button></figcaption></figure>
-    <figure class="drop-card" data-color="blue"><img tabindex="0" role="button" aria-label="Enlarge blue front 3" src="assets/onenation-blue-front-3.webp" alt="Royal blue OneNation S.V.G. graphic T-shirt variation"><figcaption><h3>Royal Blue Edition · Style 3</h3><p>Caribbean-inspired statement print</p><button type="button" class="choose-design" data-design="Royal Blue Edition · Style 3">Choose this design</button></figcaption></figure>
-    <figure class="drop-card wide"><img src="assets/onenation-collection-lineup.webp" alt="Lineup of OneNation S.V.G. graphic T-shirts in black"><figcaption><h3>OneNation Collection Lineup</h3><p>A look across the latest black tee designs</p></figcaption></figure>
-    <figure class="drop-card" data-color="guide"><img tabindex="0" role="button" aria-label="Enlarge print size guide" src="assets/onenation-print-size-guide.webp" alt="OneNation S.V.G. T-shirt print size guide showing 10 inches wide by 9 inches high"><figcaption><h3>Print Size Reference</h3><p>Shown print dimensions: 10 inches wide × 9 inches high</p><button type="button" class="choose-design" data-design="Print Size Reference">Choose this design</button></figcaption></figure>
-  </div>
-  <div class="drop-note">Want one of these designs? Choose your preferred style and colour, then contact OneNation S.V.G. to confirm your size, printing details and final price. Standard-size printing starts at EC$65.</div>
+<section class="section" id="shop">
+<div class="section-head"><div><div class="eyebrow">The collection</div><h2>REPRESENT<br>WHERE YOU'RE FROM.</h2></div><p class="section-intro">Bold island-inspired artwork made to wear with pride. Standard-size printing starts at EC$65.</p></div>
+<div class="products">
+<article class="product"><div class="product-art"><div class="tee"><div class="print">ONSVG<small>ONE NATIONS.VG</small></div></div></div><div class="product-info"><div><h3>SVG Heritage Signature Tee</h3><p>Black tee · Island artwork · Signature graphic</p></div><span class="tag">Featured</span></div></article>
+<article class="product"><div class="product-art"><div class="tee blue"><div class="print">ONSVG<small>SVG PRIDE</small></div></div></div><div class="product-info"><div><h3>Royal Blue Edition</h3><p>Blue tee · Caribbean identity · Bold colour</p></div><span class="tag">New</span></div></article>
+<article class="product"><div class="product-art"><div class="tee white"><div class="print" style="color:#111;border-color:#167bd0">ONSVG<small>ONE NATION</small></div></div></div><div class="product-info"><div><h3>Clean Heritage Edition</h3><p>White tee · Clean statement · Island pride</p></div><span class="tag">Classic</span></div></article>
+</div>
 </section>
 
-
-
-<section class="section womens-collection" id="womens">
-  <div class="section-head">
-    <div>
-      <div class="eyebrow">Women's collection · OneNation S.V.G.</div>
-      <h2>SVG PRIDE.<br>HER STYLE.</h2>
-    </div>
-    <p class="section-intro">Meet the women's OneNation S.V.G. collection. Four bold colourways, confident island style and the same artwork made to represent Saint Vincent and the Grenadines.</p>
-  </div>
-  <div class="womens-grid">
-    <figure class="womens-card">
-      <img tabindex="0" role="button" aria-label="Enlarge women's black OneNation shirt look"
-           src="assets/onenation-womens-black-model.png"
-           alt="Woman modelling the black OneNation S.V.G. graphic T-shirt">
-      <figcaption>
-        <h3>Black Edition</h3>
-        <p>Classic black · Bold island pride</p>
-        <button type="button" class="choose-design" data-design="Women's Black Edition">Choose this design</button>
-      </figcaption>
-    </figure>
-    <figure class="womens-card">
-      <img tabindex="0" role="button" aria-label="Enlarge women's bright blue OneNation shirt look"
-           src="assets/onenation-womens-bright-blue-model.png"
-           alt="Woman modelling the bright blue OneNation S.V.G. graphic T-shirt">
-      <figcaption>
-        <h3>Bright Blue Edition</h3>
-        <p>Vibrant blue · Island energy</p>
-        <button type="button" class="choose-design" data-design="Women's Bright Blue Edition">Choose this design</button>
-      </figcaption>
-    </figure>
-    <figure class="womens-card">
-      <img tabindex="0" role="button" aria-label="Enlarge women's white OneNation shirt look"
-           src="assets/onenation-womens-white-model.png"
-           alt="Woman modelling the white OneNation S.V.G. graphic T-shirt">
-      <figcaption>
-        <h3>White Edition</h3>
-        <p>Fresh white · Clean statement</p>
-        <button type="button" class="choose-design" data-design="Women's White Edition">Choose this design</button>
-      </figcaption>
-    </figure>
-    <figure class="womens-card">
-      <img tabindex="0" role="button" aria-label="Enlarge women's navy OneNation shirt look"
-           src="assets/onenation-womens-navy-model.png"
-           alt="Woman modelling the navy OneNation S.V.G. graphic T-shirt">
-      <figcaption>
-        <h3>Navy Edition</h3>
-        <p>Deep navy · Everyday representation</p>
-        <button type="button" class="choose-design" data-design="Women's Navy Edition">Choose this design</button>
-      </figcaption>
-    </figure>
-  </div>
-  <div class="drop-note">Select a colourway to enquire by text. Confirm available sizes, shirt colour, print details and final price with OneNation S.V.G.</div>
+<section class="section order" id="ordering">
+<div class="section-head"><div><div class="eyebrow">Ordering information</div><h2>MAKE IT<br>YOURS.</h2></div><p class="section-intro">Choose a design or share your own idea. Confirm your shirt, print details and final price before ordering.</p></div>
+<div class="order-panel"><div><div class="eyebrow">Printing starts at</div><div class="price">EC$65</div><p>Starting price for standard-size printing. Final pricing depends on the design, print size and order details.</p></div><div><div class="eyebrow">How to order</div><ol><li>Choose your design or share an idea.</li><li>Contact OneNation S.V.G.</li><li>Confirm printing details and final price.</li><li>Arrange your order.</li></ol></div></div>
+<div class="contact"><a class="primary" href="tel:+17844926777">Call +1 784 492 6777</a><a href="https://wa.me/17844926777?text=Hello%20OneNation%20SVG%2C%20I%27m%20interested%20in%20a%20design." target="_blank" rel="noopener">WhatsApp</a></div>
 </section>
 
-<section class="section holiday-drop" id="holiday">
-  <div class="section-head">
-    <div>
-      <div class="eyebrow">Christmas collection · OneNation S.V.G.</div>
-      <h2>THE HOLIDAY<br>COLLECTION.</h2>
-    </div>
-    <p class="section-intro">New festive OneNation S.V.G. artwork for men and women, presented across bold red, green, royal blue and white tees.</p>
-  </div>
-  <div class="holiday-intro">
-    <img src="assets/onenation-holiday-sheet-1.png" alt="OneNation S.V.G. holiday collection preview">
-    <div>
-      <div class="eyebrow">NEW SEASON</div>
-      <h3>REPRESENT THE NATION FOR THE HOLIDAYS.</h3>
-      <p>Browse the individual designs below. Select a design and contact OneNation S.V.G. to confirm your shirt colour, size, print details and final price.</p>
-    </div>
-  </div>
-  <div class="holiday-grid">
-    <figure class="holiday-card">
-  <img tabindex="0" role="button" aria-label="Enlarge OneNation holiday design 1"
-       src="assets/onenation-holiday-01.jpg"
-       alt="OneNation S.V.G. holiday T-shirt design 1">
-  <figcaption>
-    <h3>Holiday Design 01</h3>
-    <p>OneNation S.V.G. Christmas collection · available in the featured colourway</p>
-    <button type="button" class="choose-design" data-design="Holiday Design 01">Choose this design</button>
-  </figcaption>
-</figure><figure class="holiday-card">
-  <img tabindex="0" role="button" aria-label="Enlarge OneNation holiday design 2"
-       src="assets/onenation-holiday-02.jpg"
-       alt="OneNation S.V.G. holiday T-shirt design 2">
-  <figcaption>
-    <h3>Holiday Design 02</h3>
-    <p>OneNation S.V.G. Christmas collection · available in the featured colourway</p>
-    <button type="button" class="choose-design" data-design="Holiday Design 02">Choose this design</button>
-  </figcaption>
-</figure><figure class="holiday-card">
-  <img tabindex="0" role="button" aria-label="Enlarge OneNation holiday design 3"
-       src="assets/onenation-holiday-03.jpg"
-       alt="OneNation S.V.G. holiday T-shirt design 3">
-  <figcaption>
-    <h3>Holiday Design 03</h3>
-    <p>OneNation S.V.G. Christmas collection · available in the featured colourway</p>
-    <button type="button" class="choose-design" data-design="Holiday Design 03">Choose this design</button>
-  </figcaption>
-</figure><figure class="holiday-card">
-  <img tabindex="0" role="button" aria-label="Enlarge OneNation holiday design 4"
-       src="assets/onenation-holiday-04.jpg"
-       alt="OneNation S.V.G. holiday T-shirt design 4">
-  <figcaption>
-    <h3>Holiday Design 04</h3>
-    <p>OneNation S.V.G. Christmas collection · available in the featured colourway</p>
-    <button type="button" class="choose-design" data-design="Holiday Design 04">Choose this design</button>
-  </figcaption>
-</figure><figure class="holiday-card">
-  <img tabindex="0" role="button" aria-label="Enlarge OneNation holiday design 5"
-       src="assets/onenation-holiday-05.jpg"
-       alt="OneNation S.V.G. holiday T-shirt design 5">
-  <figcaption>
-    <h3>Holiday Design 05</h3>
-    <p>OneNation S.V.G. Christmas collection · available in the featured colourway</p>
-    <button type="button" class="choose-design" data-design="Holiday Design 05">Choose this design</button>
-  </figcaption>
-</figure><figure class="holiday-card">
-  <img tabindex="0" role="button" aria-label="Enlarge OneNation holiday design 6"
-       src="assets/onenation-holiday-06.jpg"
-       alt="OneNation S.V.G. holiday T-shirt design 6">
-  <figcaption>
-    <h3>Holiday Design 06</h3>
-    <p>OneNation S.V.G. Christmas collection · available in the featured colourway</p>
-    <button type="button" class="choose-design" data-design="Holiday Design 06">Choose this design</button>
-  </figcaption>
-</figure><figure class="holiday-card">
-  <img tabindex="0" role="button" aria-label="Enlarge OneNation holiday design 7"
-       src="assets/onenation-holiday-07.jpg"
-       alt="OneNation S.V.G. holiday T-shirt design 7">
-  <figcaption>
-    <h3>Holiday Design 07</h3>
-    <p>OneNation S.V.G. Christmas collection · available in the featured colourway</p>
-    <button type="button" class="choose-design" data-design="Holiday Design 07">Choose this design</button>
-  </figcaption>
-</figure><figure class="holiday-card">
-  <img tabindex="0" role="button" aria-label="Enlarge OneNation holiday design 8"
-       src="assets/onenation-holiday-08.jpg"
-       alt="OneNation S.V.G. holiday T-shirt design 8">
-  <figcaption>
-    <h3>Holiday Design 08</h3>
-    <p>OneNation S.V.G. Christmas collection · available in the featured colourway</p>
-    <button type="button" class="choose-design" data-design="Holiday Design 08">Choose this design</button>
-  </figcaption>
-</figure><figure class="holiday-card">
-  <img tabindex="0" role="button" aria-label="Enlarge OneNation holiday design 9"
-       src="assets/onenation-holiday-09.jpg"
-       alt="OneNation S.V.G. holiday T-shirt design 9">
-  <figcaption>
-    <h3>Holiday Design 09</h3>
-    <p>OneNation S.V.G. Christmas collection · available in the featured colourway</p>
-    <button type="button" class="choose-design" data-design="Holiday Design 09">Choose this design</button>
-  </figcaption>
-</figure><figure class="holiday-card">
-  <img tabindex="0" role="button" aria-label="Enlarge OneNation holiday design 10"
-       src="assets/onenation-holiday-10.jpg"
-       alt="OneNation S.V.G. holiday T-shirt design 10">
-  <figcaption>
-    <h3>Holiday Design 10</h3>
-    <p>OneNation S.V.G. Christmas collection · available in the featured colourway</p>
-    <button type="button" class="choose-design" data-design="Holiday Design 10">Choose this design</button>
-  </figcaption>
-</figure><figure class="holiday-card">
-  <img tabindex="0" role="button" aria-label="Enlarge OneNation holiday design 11"
-       src="assets/onenation-holiday-11.jpg"
-       alt="OneNation S.V.G. holiday T-shirt design 11">
-  <figcaption>
-    <h3>Holiday Design 11</h3>
-    <p>OneNation S.V.G. Christmas collection · available in the featured colourway</p>
-    <button type="button" class="choose-design" data-design="Holiday Design 11">Choose this design</button>
-  </figcaption>
-</figure><figure class="holiday-card">
-  <img tabindex="0" role="button" aria-label="Enlarge OneNation holiday design 12"
-       src="assets/onenation-holiday-12.jpg"
-       alt="OneNation S.V.G. holiday T-shirt design 12">
-  <figcaption>
-    <h3>Holiday Design 12</h3>
-    <p>OneNation S.V.G. Christmas collection · available in the featured colourway</p>
-    <button type="button" class="choose-design" data-design="Holiday Design 12">Choose this design</button>
-  </figcaption>
-</figure><figure class="holiday-card">
-  <img tabindex="0" role="button" aria-label="Enlarge OneNation holiday design 13"
-       src="assets/onenation-holiday-13.jpg"
-       alt="OneNation S.V.G. holiday T-shirt design 13">
-  <figcaption>
-    <h3>Holiday Design 13</h3>
-    <p>OneNation S.V.G. Christmas collection · available in the featured colourway</p>
-    <button type="button" class="choose-design" data-design="Holiday Design 13">Choose this design</button>
-  </figcaption>
-</figure><figure class="holiday-card">
-  <img tabindex="0" role="button" aria-label="Enlarge OneNation holiday design 14"
-       src="assets/onenation-holiday-14.jpg"
-       alt="OneNation S.V.G. holiday T-shirt design 14">
-  <figcaption>
-    <h3>Holiday Design 14</h3>
-    <p>OneNation S.V.G. Christmas collection · available in the featured colourway</p>
-    <button type="button" class="choose-design" data-design="Holiday Design 14">Choose this design</button>
-  </figcaption>
-</figure><figure class="holiday-card">
-  <img tabindex="0" role="button" aria-label="Enlarge OneNation holiday design 15"
-       src="assets/onenation-holiday-15.jpg"
-       alt="OneNation S.V.G. holiday T-shirt design 15">
-  <figcaption>
-    <h3>Holiday Design 15</h3>
-    <p>OneNation S.V.G. Christmas collection · available in the featured colourway</p>
-    <button type="button" class="choose-design" data-design="Holiday Design 15">Choose this design</button>
-  </figcaption>
-</figure><figure class="holiday-card">
-  <img tabindex="0" role="button" aria-label="Enlarge OneNation holiday design 16"
-       src="assets/onenation-holiday-16.jpg"
-       alt="OneNation S.V.G. holiday T-shirt design 16">
-  <figcaption>
-    <h3>Holiday Design 16</h3>
-    <p>OneNation S.V.G. Christmas collection · available in the featured colourway</p>
-    <button type="button" class="choose-design" data-design="Holiday Design 16">Choose this design</button>
-  </figcaption>
-</figure><figure class="holiday-card">
-  <img tabindex="0" role="button" aria-label="Enlarge OneNation holiday design 17"
-       src="assets/onenation-holiday-17.jpg"
-       alt="OneNation S.V.G. holiday T-shirt design 17">
-  <figcaption>
-    <h3>Holiday Design 17</h3>
-    <p>OneNation S.V.G. Christmas collection · available in the featured colourway</p>
-    <button type="button" class="choose-design" data-design="Holiday Design 17">Choose this design</button>
-  </figcaption>
-</figure><figure class="holiday-card">
-  <img tabindex="0" role="button" aria-label="Enlarge OneNation holiday design 18"
-       src="assets/onenation-holiday-18.jpg"
-       alt="OneNation S.V.G. holiday T-shirt design 18">
-  <figcaption>
-    <h3>Holiday Design 18</h3>
-    <p>OneNation S.V.G. Christmas collection · available in the featured colourway</p>
-    <button type="button" class="choose-design" data-design="Holiday Design 18">Choose this design</button>
-  </figcaption>
-</figure><figure class="holiday-card">
-  <img tabindex="0" role="button" aria-label="Enlarge OneNation holiday design 19"
-       src="assets/onenation-holiday-19.jpg"
-       alt="OneNation S.V.G. holiday T-shirt design 19">
-  <figcaption>
-    <h3>Holiday Design 19</h3>
-    <p>OneNation S.V.G. Christmas collection · available in the featured colourway</p>
-    <button type="button" class="choose-design" data-design="Holiday Design 19">Choose this design</button>
-  </figcaption>
-</figure><figure class="holiday-card">
-  <img tabindex="0" role="button" aria-label="Enlarge OneNation holiday design 20"
-       src="assets/onenation-holiday-20.jpg"
-       alt="OneNation S.V.G. holiday T-shirt design 20">
-  <figcaption>
-    <h3>Holiday Design 20</h3>
-    <p>OneNation S.V.G. Christmas collection · available in the featured colourway</p>
-    <button type="button" class="choose-design" data-design="Holiday Design 20">Choose this design</button>
-  </figcaption>
-</figure><figure class="holiday-card">
-  <img tabindex="0" role="button" aria-label="Enlarge OneNation holiday design 21"
-       src="assets/onenation-holiday-21.jpg"
-       alt="OneNation S.V.G. holiday T-shirt design 21">
-  <figcaption>
-    <h3>Holiday Design 21</h3>
-    <p>OneNation S.V.G. Christmas collection · available in the featured colourway</p>
-    <button type="button" class="choose-design" data-design="Holiday Design 21">Choose this design</button>
-  </figcaption>
-</figure><figure class="holiday-card">
-  <img tabindex="0" role="button" aria-label="Enlarge OneNation holiday design 22"
-       src="assets/onenation-holiday-22.jpg"
-       alt="OneNation S.V.G. holiday T-shirt design 22">
-  <figcaption>
-    <h3>Holiday Design 22</h3>
-    <p>OneNation S.V.G. Christmas collection · available in the featured colourway</p>
-    <button type="button" class="choose-design" data-design="Holiday Design 22">Choose this design</button>
-  </figcaption>
-</figure>
-  </div>
-  <div class="drop-note">Holiday designs are shown as supplied by OneNation S.V.G. Final shirt colour, print size and pricing are confirmed before the order is arranged.</div>
+<section class="section lookbook" id="lookbook">
+<div class="section-head"><div><div class="eyebrow">On the people</div><h2>MADE TO BE<br>REPRESENTED.</h2></div><p class="section-intro">From everyday streetwear to statement pieces, carry your roots wherever you go.</p></div>
+<div class="looks">
+<div class="look"><div class="person"></div><div class="look-label">THE EVERYDAY REPRESENTATIVE<small>ONE NATION · SVG</small></div></div>
+<div class="look"><div class="person"></div><div class="look-label">CULTURE IN EVERY STEP<small>ONE NATION · SVG</small></div></div>
+<div class="look"><div class="person"></div><div class="look-label">ISLAND PRIDE<small>ONE NATION · SVG</small></div></div>
+</div>
 </section>
 
-<section class="section lookbook" id="lookbook"><div class="section-head"><div><div class="eyebrow">On the people</div><h2>MADE TO BE<br>REPRESENTED.</h2></div><p class="section-intro">From everyday streetwear to statement pieces, carry your roots wherever you go.</p></div><div class="lookbook-grid"><div class="look"><img src="assets/onenation-mens-look.jpg" alt="Men's OneNation S.V.G. outfit"><div class="look-label">THE EVERYDAY REPRESENTATIVE<small>ONE NATION · SVG</small></div></div><div class="look"><img src="assets/onenation-womens-look-1.jpg" alt="Women's OneNation S.V.G. outfit"><div class="look-label">CULTURE IN EVERY STEP<small>ONE NATION · SVG</small></div></div></div></section>
-<section class="section story" id="story"><div class="story-mark"><img src="assets/onenation-brand-artwork.jpg" alt="OneNation S.V.G. brand artwork with Saint Vincent and the Grenadines flag colours"></div><div class="story-copy"><div class="eyebrow">More than a name</div><h2>ONE ROOT.<br>MANY VOICES.</h2><p>OneNation S.V.G. is built around a simple idea: where we come from is part of who we are. Inspired by the spirit of Saint Vincent and the Grenadines and the wider Caribbean, the brand celebrates togetherness, self-expression and the pride of representing.</p><p>Every piece is an opportunity to carry that spirit with you — wherever life takes you.</p><div class="values"><div class="value"><b>Unity</b><span>Stronger together.</span></div><div class="value"><b>Culture</b><span>Always represent.</span></div><div class="value"><b>Progress</b><span>Move forward together.</span></div></div></div></section>
-<section class="cta" id="contact"><div class="eyebrow">Your people. Your culture. Your brand.</div><h2>BE PART OF THE NATION.</h2><p>Choose a design from the collection or share your own idea. Contact OneNation S.V.G. to confirm your printing details and final price.</p><div class="order-panel"><div><div class="eyebrow">Custom printing starts at</div><div class="price">EC$65</div><p>Starting price for standard-size printing. Final pricing depends on the design, print size and order details.</p></div><div><div class="eyebrow">How customers order</div><ol><li>Choose a design or share an idea.</li><li>Contact OneNation S.V.G.</li><li>Confirm printing details and final price.</li><li>Arrange your order.</li></ol></div></div><div class="contact-links"><a class="primary" href="tel:+17844926777">Call +1 784 492 6777</a><a href="https://www.instagram.com/svg_onenation?dlrf=MTlka3NtMmswYmZvag==" target="_blank" rel="noopener">Instagram</a><a href="https://www.facebook.com/share/151Dh9qmmAi/" target="_blank" rel="noopener">Facebook</a></div><p class="contact-note">Call or visit our social pages to discuss your order. Printing details and final pricing are confirmed before your order is arranged.</p></section>
+<section class="section story" id="story">
+<div class="brand-art"><strong>ONSVG</strong><span>UNITY · CULTURE · PROGRESS</span></div>
+<div class="story-copy"><div class="eyebrow">More than a name</div><h2>ONE ROOT.<br>MANY VOICES.</h2><p>OneNation S.V.G. is built around a simple idea: where we come from is part of who we are. Inspired by the spirit of Saint Vincent and the Grenadines and the wider Caribbean, the brand celebrates togetherness, self-expression and the pride of representing.</p><p>Every piece is an opportunity to carry that spirit with you — wherever life takes you.</p><div class="values"><div class="value"><b>Unity</b><span>Stronger together.</span></div><div class="value"><b>Culture</b><span>Always represent.</span></div><div class="value"><b>Progress</b><span>Move forward together.</span></div></div></div>
+</section>
+
+<section class="cta" id="contact"><div class="eyebrow">Your people. Your culture. Your brand.</div><h2>BE PART OF THE NATION.</h2><p>Interested in the collection, a custom order or a collaboration? Contact OneNation S.V.G. to discuss your design and printing needs.</p><div class="contact center"><a class="primary" href="tel:+17844926777">Call +1 784 492 6777</a><a href="https://wa.me/17844926777?text=Hello%20OneNation%20SVG%2C%20I%27m%20interested%20in%20your%20collection." target="_blank" rel="noopener">WhatsApp</a><a href="https://www.instagram.com/svg_onenation" target="_blank" rel="noopener">Instagram</a><a href="https://www.facebook.com/share/151Dh9qmmAi/" target="_blank" rel="noopener">Facebook</a></div></section>
 </main>
 <footer><strong>ONE NATION S.V.G.</strong><span>ONE PEOPLE · ONE CULTURE · ONE NATION</span><span>© <span id="year"></span> OneNation S.V.G.</span></footer>
-<script>document.getElementById('year').textContent=new Date().getFullYear();</script>
-
-<div class="image-viewer" id="imageViewer" role="dialog" aria-modal="true" aria-label="Product image preview"><button type="button" id="closeViewer">Close ✕</button><img id="viewerImage" alt="Expanded product preview"></div>
 <script>
-(function(){
- const cards=[...document.querySelectorAll('.drop-card')];
- document.querySelectorAll('[data-filter]').forEach(btn=>btn.addEventListener('click',()=>{const f=btn.dataset.filter;document.querySelectorAll('[data-filter]').forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));cards.forEach(card=>card.hidden=!(f==='all'||card.dataset.color===f));}));
- const viewer=document.getElementById('imageViewer'), preview=document.getElementById('viewerImage');
- function openImage(img){preview.src=img.src;preview.alt=img.alt;viewer.classList.add('open');document.getElementById('closeViewer').focus();}
- function closeImage(){viewer.classList.remove('open');preview.removeAttribute('src');}
- document.querySelectorAll('.drop-card img').forEach(img=>{img.addEventListener('click',()=>openImage(img));img.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openImage(img);}})});
- document.getElementById('closeViewer').addEventListener('click',closeImage);viewer.addEventListener('click',e=>{if(e.target===viewer)closeImage()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeImage()});
- document.querySelectorAll('.choose-design').forEach(btn=>btn.addEventListener('click',()=>{const message='Hello OneNation S.V.G.! I am interested in: '+btn.dataset.design+'. Please let me know the available sizes, printing details and final price.';window.location.href='sms:+17844926777?body='+encodeURIComponent(message);}));
- const toggle=document.querySelector('.mobile-menu-toggle'),nav=document.querySelector('header nav');toggle.addEventListener('click',()=>{const open=nav.classList.toggle('menu-open');toggle.setAttribute('aria-expanded',String(open));});nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('menu-open');toggle.setAttribute('aria-expanded','false')}));
-})();
+document.getElementById('year').textContent=new Date().getFullYear();
+document.getElementById('menu').addEventListener('click',function(){var n=document.getElementById('nav');var open=n.style.display==='flex';n.style.display=open?'':'flex';this.setAttribute('aria-expanded',String(!open));});
 </script>
-</body></html>
+</body>
+</html>
