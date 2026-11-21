@@ -40,9 +40,10 @@ This audit combines the repository review with live public-web verification of t
 - [x] Verify the canonical custom production domain and preview deployment.
 - [x] Exclude the legacy `pages.dev` project URL from the active production workflow.
 - [x] Run live browser smoke testing of homepage, Men, Women, and Copyright routes.
-- [ ] Confirm current price and contact details.
-- [ ] Review copyright wording and contributor/third-party permissions.
-- [ ] Complete formal keyboard, screen-reader, and mobile accessibility sign-off.
+- [x] Confirm current price and contact details.
+- [x] Review/confirm copyright wording and contributor/third-party permissions for the current published material.
+- [ ] Redeploy/refresh the canonical custom domain from the current `main` baseline, then complete final mobile-menu accessibility verification.
+- [x] Confirm image-viewer keyboard accessibility in a live browser smoke test.
 
 ## Preservation rule
 No original creative asset was deleted or replaced as part of this audit. The repository `main` branch remains the shared baseline.
