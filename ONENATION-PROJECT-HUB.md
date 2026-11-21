@@ -8,9 +8,10 @@ This document is the starting point for navigating the OneNation VC Hub project.
 
 ## Official project links
 
-- Main website: https://onenationsvg.pages.dev
-- Custom domain: https://www.onenationsvg.dpdns.org
-- Cloudflare preview: https://onenationsvg-git.pages.dev/
+- Canonical production website: https://www.onenationsvg.dpdns.org/
+- Root production domain: https://onenationsvg.dpdns.org/
+- Cloudflare Pages preview: https://onenationsvg-git.pages.dev/
+- Legacy Pages endpoint (not for promotion or release): https://onenationsvg.pages.dev
 - Source repository: https://github.com/onenationsvg/onenationsvg
 
 These links are recorded project references; their current availability and deployment status should be checked before making release announcements.
