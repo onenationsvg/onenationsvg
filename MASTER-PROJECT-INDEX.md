@@ -3,9 +3,11 @@
 ## Source of truth
 - Repository: https://github.com/onenationsvg/onenationsvg
 - Branch: `main`
-- Live site: https://onenationsvg.pages.dev/
-- Custom domain: https://www.onenationsvg.dpdns.org/
+- Canonical custom domain: https://www.onenationsvg.dpdns.org/
+- Cloudflare Pages project URL: https://onenationsvg.pages.dev/
 - Preview: https://onenationsvg-git.pages.dev/
+
+**Deployment note (2026-11-21):** GitHub `main` is the shared source of truth. Live verification shows the custom domain and preview are serving the current Women-enabled site. The `pages.dev` project URL is not yet serving the same route content consistently: collection routes and direct women's asset paths fall back to the homepage. Treat the custom domain as the current public production endpoint until the Cloudflare Pages project URL is reconciled.
 
 ## Approved identity
 - Brand: OneNation VC Hub
@@ -15,6 +17,7 @@
 ## Current production website
 - `index.html` — primary website
 - `mens-collection.html` — men's collection
+- `womens-collection.html` — women's collection
 - `copyright.html` — copyright / IP page
 - `_headers` — site headers
 - `assets/` — approved visual assets
@@ -26,6 +29,8 @@
 - `UPDATE-NOTES-MENS-COLLECTION.txt`
 - `readme-womens-collection-update.txt`
 - `ONENATION-COLLABORATION-STANDARD.md`
+- `ONENATION-WEBSITE-AUDIT-2026-11-21.md`
+- `COLLABORATOR-SYNC-CHECKLIST.md`
 
 ## Asset policy
 The contents of `assets/` are the current repository asset set. Do not replace or delete an existing asset merely to make a personal/local copy match. Add new approved assets with clear names and update this index when they become part of the production set.
@@ -36,8 +41,9 @@ Use `main` as the shared baseline. Before making work, sync from `main`. Make ch
 ## Important
 This index is an organizational layer; it does not erase creative history or silently overwrite collaborator-owned files. Each collaborator should synchronize their own workspace from this repository.
 
-
 ## Collection page status — 2026-11-21
-- Men's collection: `mens-collection.html` exists and is now linked from the homepage navigation.
-- Women's collection: the repository contains an older women's-update note describing a prepared ZIP, but no dedicated women's collection HTML page was found at the repository root during the audit. The homepage does not currently expose a women's collection section.
-- Do not add a Women navigation link until the actual page and its four collection looks/assets have been recovered and checked. This avoids sending visitors to a missing page or publishing placeholder products.
+- Men's collection: `mens-collection.html` exists and is linked from the homepage navigation.
+- Women's collection: `womens-collection.html` exists, is linked from the homepage navigation in GitHub `main`, and uses the four approved model PNGs plus the two women's lookbook JPGs.
+- The four approved women's model assets are physically present in `assets/`: black, bright blue, navy, and white.
+- The custom production domain serves the women's collection successfully.
+- The `pages.dev` project URL currently needs Cloudflare deployment/cache/route reconciliation so it serves the same women's route and assets as the custom domain.
