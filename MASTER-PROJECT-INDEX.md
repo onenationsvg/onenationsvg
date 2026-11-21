@@ -3,11 +3,11 @@
 ## Source of truth
 - Repository: https://github.com/onenationsvg/onenationsvg
 - Branch: `main`
-- Canonical custom domain: https://www.onenationsvg.dpdns.org/
-- Cloudflare Pages project URL: https://onenationsvg.pages.dev/
-- Preview: https://onenationsvg-git.pages.dev/
+- Canonical public production domain: https://www.onenationsvg.dpdns.org/
+- Cloudflare Pages preview: https://onenationsvg-git.pages.dev/
+- Legacy Cloudflare Pages endpoint: https://onenationsvg.pages.dev/
 
-**Deployment note (2026-11-21):** GitHub `main` is the shared source of truth. Live verification shows the custom domain and preview are serving the current Women-enabled site. The `pages.dev` project URL is not yet serving the same route content consistently: collection routes and direct women's asset paths fall back to the homepage. Treat the custom domain as the current public production endpoint until the Cloudflare Pages project URL is reconciled.
+**Deployment policy (2026-11-21):** GitHub `main` is the shared source of truth. The canonical custom domain is the public production endpoint, and the `-git.pages.dev` address is used for preview/testing. The older `pages.dev` project URL is retained only as a legacy endpoint and is not a production target because its routing is not currently consistent with the canonical deployment. Do not use the legacy endpoint for releases, promotion, or collaborator work.
 
 ## Approved identity
 - Brand: OneNation VC Hub
@@ -45,5 +45,5 @@ This index is an organizational layer; it does not erase creative history or sil
 - Men's collection: `mens-collection.html` exists and is linked from the homepage navigation.
 - Women's collection: `womens-collection.html` exists, is linked from the homepage navigation in GitHub `main`, and uses the four approved model PNGs plus the two women's lookbook JPGs.
 - The four approved women's model assets are physically present in `assets/`: black, bright blue, navy, and white.
-- The custom production domain serves the women's collection successfully.
-- The `pages.dev` project URL currently needs Cloudflare deployment/cache/route reconciliation so it serves the same women's route and assets as the custom domain.
+- The canonical custom production domain serves the women's collection successfully.
+- The legacy `pages.dev` endpoint may continue to serve older/fallback routing; this is not considered a source-of-truth conflict and does not require changes to the website source.
