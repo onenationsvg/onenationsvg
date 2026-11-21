@@ -35,3 +35,9 @@ Use `main` as the shared baseline. Before making work, sync from `main`. Make ch
 
 ## Important
 This index is an organizational layer; it does not erase creative history or silently overwrite collaborator-owned files. Each collaborator should synchronize their own workspace from this repository.
+
+
+## Collection page status — 2026-11-21
+- Men's collection: `mens-collection.html` exists and is now linked from the homepage navigation.
+- Women's collection: the repository contains an older women's-update note describing a prepared ZIP, but no dedicated women's collection HTML page was found at the repository root during the audit. The homepage does not currently expose a women's collection section.
+- Do not add a Women navigation link until the actual page and its four collection looks/assets have been recovered and checked. This avoids sending visitors to a missing page or publishing placeholder products.
