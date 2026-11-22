@@ -16,7 +16,7 @@ jobs:
             -X POST \
             -H "Authorization: Bearer ${DROPBOX_SYNC_SECRET}" \
             -H "Accept: application/json" \
-            "https://www.onenationsvg.dpdns.org/api/dropbox/sync")"
+            "https://onenationsvg.dpdns.org/api/dropbox/sync")"
 
           echo "Dropbox sync response:"
           echo "${response}"
