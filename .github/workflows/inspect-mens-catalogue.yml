@@ -1,0 +1,57 @@
+name: Inspect men's catalogue artwork (staging only)
+
+on:
+  push:
+    branches: [asset-performance-staging]
+
+permissions:
+  contents: read
+
+jobs:
+  inspect-catalogue:
+    if: github.ref == 'refs/heads/asset-performance-staging'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out staging branch
+        uses: actions/checkout@v4
+      - name: Install PDF tools
+        run: python -m pip install pymupdf pillow
+      - name: Render catalogue pages and extract embedded images
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/catalogue-review/pages /tmp/catalogue-review/extracted
+          python - <<'PY'
+          import fitz, os
+          from PIL import Image, ImageOps, ImageDraw
+          pdf = fitz.open("OneNation-SVG-Mens-Collection-Catalogue.pdf")
+          thumbs=[]
+          for i, page in enumerate(pdf):
+              pix=page.get_pixmap(matrix=fitz.Matrix(1.8,1.8), alpha=False)
+              path=f"/tmp/catalogue-review/pages/page-{i+1:02d}.png"
+              pix.save(path)
+              im=Image.open(path).convert("RGB")
+              im.thumbnail((420,560))
+              tile=Image.new("RGB",(440,600),"white")
+              tile.paste(im,((440-im.width)//2,25))
+              ImageDraw.Draw(tile).text((12,5),f"Page {i+1}",fill="black")
+              thumbs.append(tile)
+              for j, info in enumerate(page.get_images(full=True)):
+                  xref=info[0]
+                  base=pdf.extract_image(xref)
+                  ext=base["ext"]
+                  out=f"/tmp/catalogue-review/extracted/page-{i+1:02d}-image-{j+1:02d}.{ext}"
+                  with open(out,"wb") as f: f.write(base["image"])
+          cols=2
+          rows=(len(thumbs)+cols-1)//cols
+          sheet=Image.new("RGB",(cols*440,rows*600),(225,225,225))
+          for k,im in enumerate(thumbs): sheet.paste(im,((k%cols)*440,(k//cols)*600))
+          sheet.save("/tmp/catalogue-review/page-contact-sheet.jpg",quality=90)
+          print(f"Rendered {len(pdf)} pages; extracted {len(os.listdir('/tmp/catalogue-review/extracted'))} embedded images.")
+          PY
+      - name: Upload catalogue review package
+        uses: actions/upload-artifact@v4
+        with:
+          name: mens-catalogue-review
+          path: /tmp/catalogue-review/
+          retention-days: 3
