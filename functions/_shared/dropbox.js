@@ -13,10 +13,10 @@ function fromBase64Url(value) {
   return Uint8Array.from(binary, (char) => char.charCodeAt(0));
 }
 
-async function tokenCryptoKey(appSecret, usage) {
-  const material = new TextEncoder().encode("onenation-dropbox-token-v1:" + usage + ":" + appSecret);
+async function tokenCryptoKey(appSecret, keyUsage) {
+  const material = new TextEncoder().encode("onenation-dropbox-token-v1:" + appSecret);
   const digest = await crypto.subtle.digest("SHA-256", material);
-  return crypto.subtle.importKey("raw", digest, { name: "AES-GCM" }, false, [usage]);
+  return crypto.subtle.importKey("raw", digest, { name: "AES-GCM" }, false, [keyUsage]);
 }
 
 export async function encryptToken(token, appSecret) {
