@@ -6,7 +6,7 @@ on:
     branches: [asset-performance-staging]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   inspect-catalogue:
@@ -50,6 +50,41 @@ jobs:
           sheet.save("/tmp/catalogue-review/page-contact-sheet.jpg",quality=90)
           print(f"Rendered {len(pdf)} pages; extracted {len(os.listdir('/tmp/catalogue-review/extracted'))} embedded images.")
           PY
+      - name: Install the five exact catalogue artworks on staging
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p assets/mens-catalogue
+          python - <<'PY'
+          from PIL import Image
+          import os
+          source='/tmp/catalogue-review/extracted'
+          names={
+            2:'01-island-born-world-ready.jpg',
+            3:'02-wear-your-identity.jpg',
+            4:'03-onenation-svg-crest.jpg',
+            5:'04-svg-my-roots.jpg',
+            6:'05-on-signature-logo.jpg',
+          }
+          for page,name in names.items():
+              path=f'{source}/page-{page:02d}-image-01.jpeg'
+              im=Image.open(path).convert('RGB')
+              im.save(f'assets/mens-catalogue/{name}',format='JPEG',quality=90,optimize=True,progressive=True)
+          print('Installed exact catalogue artwork:', ', '.join(names.values()))
+          PY
+      - name: Commit catalogue artwork to staging
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/mens-catalogue
+          if git diff --cached --quiet; then
+            echo "Catalogue artwork is already current."
+          else
+            git commit -m "Add exact men's catalogue artwork to staging"
+            git push origin HEAD:asset-performance-staging
+          fi
       - name: Upload catalogue review package
         uses: actions/upload-artifact@v4
         with:
