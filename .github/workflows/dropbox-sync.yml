@@ -12,16 +12,25 @@ jobs:
           DROPBOX_SYNC_SECRET: ${{ secrets.DROPBOX_SYNC_SECRET }}
         run: |
           set -euo pipefail
-          response="$(curl --fail-with-body --silent --show-error \
+          http_status="$(curl --silent --show-error \
+            --output response.json \
+            --write-out "%{http_code}" \
             -X POST \
             -H "Authorization: Bearer ${DROPBOX_SYNC_SECRET}" \
             -H "Accept: application/json" \
             "https://onenationsvg.dpdns.org/api/dropbox/sync")"
 
+          echo "Dropbox sync HTTP status: ${http_status}"
           echo "Dropbox sync response:"
-          echo "${response}"
+          cat response.json
+          echo
 
-          if ! echo "${response}" | grep -q '"ok":true'; then
+          if [[ "${http_status}" -lt 200 || "${http_status}" -ge 300 ]]; then
+            echo "Dropbox sync endpoint returned a non-success HTTP status."
+            exit 1
+          fi
+
+          if ! grep -q '"ok":true' response.json; then
             echo "Dropbox sync did not report ok=true."
             exit 1
           fi
