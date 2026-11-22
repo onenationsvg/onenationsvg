@@ -1,7 +1,8 @@
 name: Extract optimized website assets (staging only)
 
 on:
-  workflow_dispatch:
+  push:
+    branches: [asset-performance-staging]
 
 permissions:
   contents: write
