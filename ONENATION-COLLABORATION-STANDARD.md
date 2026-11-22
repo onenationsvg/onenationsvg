@@ -21,11 +21,11 @@ Repository: https://github.com/onenationsvg/onenationsvg
 
 ## Website references
 
-- Production-intended site: https://onenationsvg.pages.dev
-- Custom domain: https://www.onenationsvg.dpdns.org
-- Git branch preview: https://onenationsvg-git.pages.dev/
+- **Canonical production website:** https://www.onenationsvg.dpdns.org/
+- **Git branch preview/testing:** https://onenationsvg-git.pages.dev/
+- **Legacy Pages endpoint (not for releases or promotion):** https://onenationsvg.pages.dev/
 
-These are project reference URLs; deployment status and domain configuration should be checked in the hosting dashboard before making operational claims.
+Use the canonical custom domain for public releases and promotion. Use the `-git.pages.dev` address for preview/testing. The older `onenationsvg.pages.dev` endpoint is retained for legacy access and is not a production target. Check the hosting dashboard before making claims about a particular deployment's status.
 
 ## Collaboration and sync procedure
 
@@ -44,3 +44,4 @@ The root currently includes the website entry page, collection and copyright pag
 ## Change log
 
 - 2026-11-21: Recorded the approved master identity direction D, tagline, shared-repository workflow, and known website reference URLs as the collaboration standard.
+- 2026-11-22: Aligned website references with the canonical custom production domain, Git branch preview, and legacy Pages endpoint.

@@ -9,9 +9,11 @@ This repository is the shared source of truth for the OneNation VC Hub website a
 - Tagline: **Unity • Culture • Progress**
 
 ## Website
-- Production: https://onenationsvg.pages.dev/
-- Custom domain: https://www.onenationsvg.dpdns.org/
-- Preview: https://onenationsvg-git.pages.dev/
+- **Production (canonical custom domain):** https://www.onenationsvg.dpdns.org/
+- **Preview (Git branch preview):** https://onenationsvg-git.pages.dev/
+- **Legacy Pages endpoint (not for releases or promotion):** https://onenationsvg.pages.dev/
+
+Use the canonical custom domain for public releases and promotion. Use the `-git.pages.dev` address for preview/testing. The older `onenationsvg.pages.dev` endpoint is retained as a legacy endpoint and is not a production target.
 
 ## Start here
 - [Master Project Index](MASTER-PROJECT-INDEX.md)
