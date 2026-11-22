@@ -1,6 +1,8 @@
 This update is based on the user-uploaded OneNation-SVG-Metricool-Updated.zip.
 All supplied files and existing assets from that ZIP are retained.
-Added mens-collection.html, five men's campaign artwork images and the six-page PDF catalogue.
+Added mens-collection.html and the six-page OneNation-SVG-Mens-Collection-Catalogue.pdf.
+The five men's collection display images are extracted directly from catalogue pages 2–6, preserving the exact campaign artwork shown in the PDF.
+The extracted images are stored under assets/mens-catalogue/ and referenced by mens-collection.html.
 Added a Men navigation link to index.html where the existing nav was detected.
 No WhatsApp ordering button was added.
 Deploy this extracted folder with index.html at its root and assets/ beside it.
