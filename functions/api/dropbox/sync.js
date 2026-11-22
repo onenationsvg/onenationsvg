@@ -102,9 +102,11 @@ function base64(bytes) {
   return btoa(out);
 }
 
-export async function onRequestPost({ env }) {
+export async function onRequestPost({ request, env }) {
   try {
-    if (!env.GITHUB_TOKEN) return json({ ok: false, error: "GitHub sync is not configured." }, 503);
+    if (!env.GITHUB_TOKEN || !env.DROPBOX_SYNC_SECRET) return json({ ok: false, error: "GitHub sync is not configured." }, 503);
+    const authorization = request.headers.get("Authorization") || "";
+    if (authorization !== "Bearer " + env.DROPBOX_SYNC_SECRET) return json({ ok: false, error: "Unauthorized." }, 401);
     const accessToken = await getDropboxAccessToken(env);
 
     const download = await fetch("https://content.dropboxapi.com/2/files/download", {
