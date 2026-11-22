@@ -54,7 +54,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p assets/mens-catalogue
+          mkdir -p /tmp/catalogue-review/site-assets
           python - <<'PY'
           from PIL import Image
           import os
@@ -69,7 +69,7 @@ jobs:
           for page,name in names.items():
               path=f'{source}/page-{page:02d}-image-01.jpeg'
               im=Image.open(path).convert('RGB')
-              im.save(f'assets/mens-catalogue/{name}',format='JPEG',quality=90,optimize=True,progressive=True)
+              im.save(f'/tmp/catalogue-review/site-assets/{name}',format='JPEG',quality=90,optimize=True,progressive=True)
           print('Installed exact catalogue artwork:', ', '.join(names.values()))
           PY
       - name: Commit catalogue artwork to staging
@@ -78,6 +78,10 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin asset-performance-staging
+          git reset --hard origin/asset-performance-staging
+          mkdir -p assets/mens-catalogue
+          cp -a /tmp/catalogue-review/site-assets/. assets/mens-catalogue/
           git add assets/mens-catalogue
           if git diff --cached --quiet; then
             echo "Catalogue artwork is already current."
