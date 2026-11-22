@@ -1,4 +1,5 @@
 name: Inspect men's catalogue artwork (staging only)
+run-name: Inspect men's catalogue artwork
 
 on:
   push:
