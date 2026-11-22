@@ -21,7 +21,7 @@ export async function onRequestGet({ request, env }) {
   const state = url.searchParams.get("state");
   const oauthError = url.searchParams.get("error");
   const cookieHeader = request.headers.get("Cookie") || "";
-  const stateCookie = cookieHeader.match(/(?:^|;\\s*)__Host-onenation-dropbox-state=([A-Za-z0-9_-]+)/)?.[1];
+  const stateCookie = cookieHeader.match(/(?:^|;\s*)__Host-onenation-dropbox-state=([A-Za-z0-9_-]+)/)?.[1];
 
   if (oauthError) return page("Authorization not completed", "Dropbox authorization was cancelled or declined.", 400);
   if (!code || !state || !stateCookie || state !== stateCookie || !/^[A-Za-z0-9_-]{40,60}$/.test(state)) {
