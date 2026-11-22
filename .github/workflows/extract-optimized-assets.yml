@@ -1,0 +1,52 @@
+name: Extract optimized website assets (staging only)
+
+on:
+  push:
+    branches: [asset-performance-staging]
+
+permissions:
+  contents: write
+
+jobs:
+  extract-assets:
+    if: github.ref == 'refs/heads/asset-performance-staging'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out staging branch
+        uses: actions/checkout@v4
+        with:
+          ref: asset-performance-staging
+          fetch-depth: 0
+
+      - name: Reassemble and verify package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat OneNation_optimized_assets.part01 OneNation_optimized_assets.part02 > /tmp/onenation-assets.zip
+          unzip -tq /tmp/onenation-assets.zip
+          mkdir -p /tmp/onenation-review
+          unzip -q /tmp/onenation-assets.zip -d /tmp/onenation-review
+
+      - name: Install web-ready derivatives only
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE="/tmp/onenation-review/OneNation_Performance_Upgrade_Review/web-ready"
+          test -d "$SOURCE"
+          mkdir -p assets/optimized
+          cp -a "$SOURCE/." assets/optimized/
+          echo "Installed $(find assets/optimized -type f | wc -l) files under assets/optimized/"
+
+      - name: Commit optimized assets to staging
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/optimized
+          if git diff --cached --quiet; then
+            echo "No asset changes to commit."
+          else
+            git commit -m "Add optimized website assets to staging"
+            git push origin HEAD:asset-performance-staging
+          fi

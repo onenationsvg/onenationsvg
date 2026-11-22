@@ -1,0 +1,97 @@
+name: Inspect men's catalogue artwork (staging only)
+run-name: Inspect men's catalogue artwork
+
+on:
+  push:
+    branches: [asset-performance-staging]
+
+permissions:
+  contents: write
+
+jobs:
+  inspect-catalogue:
+    if: github.ref == 'refs/heads/asset-performance-staging'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out staging branch
+        uses: actions/checkout@v4
+      - name: Install PDF tools
+        run: python -m pip install pymupdf pillow
+      - name: Render catalogue pages and extract embedded images
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/catalogue-review/pages /tmp/catalogue-review/extracted
+          python - <<'PY'
+          import fitz, os
+          from PIL import Image, ImageOps, ImageDraw
+          pdf = fitz.open("OneNation-SVG-Mens-Collection-Catalogue.pdf")
+          thumbs=[]
+          for i, page in enumerate(pdf):
+              pix=page.get_pixmap(matrix=fitz.Matrix(1.8,1.8), alpha=False)
+              path=f"/tmp/catalogue-review/pages/page-{i+1:02d}.png"
+              pix.save(path)
+              im=Image.open(path).convert("RGB")
+              im.thumbnail((420,560))
+              tile=Image.new("RGB",(440,600),"white")
+              tile.paste(im,((440-im.width)//2,25))
+              ImageDraw.Draw(tile).text((12,5),f"Page {i+1}",fill="black")
+              thumbs.append(tile)
+              for j, info in enumerate(page.get_images(full=True)):
+                  xref=info[0]
+                  base=pdf.extract_image(xref)
+                  ext=base["ext"]
+                  out=f"/tmp/catalogue-review/extracted/page-{i+1:02d}-image-{j+1:02d}.{ext}"
+                  with open(out,"wb") as f: f.write(base["image"])
+          cols=2
+          rows=(len(thumbs)+cols-1)//cols
+          sheet=Image.new("RGB",(cols*440,rows*600),(225,225,225))
+          for k,im in enumerate(thumbs): sheet.paste(im,((k%cols)*440,(k//cols)*600))
+          sheet.save("/tmp/catalogue-review/page-contact-sheet.jpg",quality=90)
+          print(f"Rendered {len(pdf)} pages; extracted {len(os.listdir('/tmp/catalogue-review/extracted'))} embedded images.")
+          PY
+      - name: Install the five exact catalogue artworks on staging
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/catalogue-review/site-assets
+          python - <<'PY'
+          from PIL import Image
+          import os
+          source='/tmp/catalogue-review/extracted'
+          names={
+            2:'01-island-born-world-ready.jpg',
+            3:'02-wear-your-identity.jpg',
+            4:'03-onenation-svg-crest.jpg',
+            5:'04-svg-my-roots.jpg',
+            6:'05-on-signature-logo.jpg',
+          }
+          for page,name in names.items():
+              path=f'{source}/page-{page:02d}-image-01.jpeg'
+              im=Image.open(path).convert('RGB')
+              im.save(f'/tmp/catalogue-review/site-assets/{name}',format='JPEG',quality=90,optimize=True,progressive=True)
+          print('Installed exact catalogue artwork:', ', '.join(names.values()))
+          PY
+      - name: Commit catalogue artwork to staging
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin asset-performance-staging
+          git reset --hard origin/asset-performance-staging
+          mkdir -p assets/mens-catalogue
+          cp -a /tmp/catalogue-review/site-assets/. assets/mens-catalogue/
+          git add assets/mens-catalogue
+          if git diff --cached --quiet; then
+            echo "Catalogue artwork is already current."
+          else
+            git commit -m "Add exact men's catalogue artwork to staging"
+            git push origin HEAD:asset-performance-staging
+          fi
+      - name: Upload catalogue review package
+        uses: actions/upload-artifact@v4
+        with:
+          name: mens-catalogue-review
+          path: /tmp/catalogue-review/
+          retention-days: 3
