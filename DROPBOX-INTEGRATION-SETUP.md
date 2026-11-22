@@ -4,8 +4,8 @@ This integration is being introduced on the `feature/dropbox-oauth-connection` b
 
 ## What it adds
 
-- `/api/dropbox/connect`: starts Dropbox's server-side OAuth 2 authorization-code flow.
-- `/api/dropbox/callback`: validates one-time OAuth state, exchanges the authorization code server-side, and stores the token encrypted.
+- `/api/dropbox/connect`: starts Dropbox's server-side OAuth 2 authorization-code flow and sets a short-lived, HttpOnly, Secure, SameSite=Lax state cookie.
+- `/api/dropbox/callback`: validates the one-time state against that cookie, exchanges the authorization code server-side, and stores the token encrypted.
 - `/api/dropbox/status`: reports only whether a Dropbox connection exists; it never returns tokens.
 - `functions/_shared/dropbox.js`: encrypts/decrypts the stored token and refreshes short-lived access tokens using the offline refresh token.
 
