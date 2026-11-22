@@ -12,8 +12,16 @@ jobs:
           DROPBOX_SYNC_SECRET: ${{ secrets.DROPBOX_SYNC_SECRET }}
         run: |
           set -euo pipefail
-          curl --fail-with-body --silent --show-error \
+          response="$(curl --fail-with-body --silent --show-error \
             -X POST \
             -H "Authorization: Bearer ${DROPBOX_SYNC_SECRET}" \
             -H "Accept: application/json" \
-            "https://www.onenationsvg.dpdns.org/api/dropbox/sync"
+            "https://www.onenationsvg.dpdns.org/api/dropbox/sync")"
+
+          echo "Dropbox sync response:"
+          echo "${response}"
+
+          if ! echo "${response}" | grep -q '"ok":true'; then
+            echo "Dropbox sync did not report ok=true."
+            exit 1
+          fi
