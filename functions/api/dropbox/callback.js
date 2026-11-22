@@ -1,11 +1,13 @@
 import { encryptToken, TOKEN_KEY } from "../../_shared/dropbox.js";
 
 const REDIRECT_URI = "https://www.onenationsvg.dpdns.org/api/dropbox/callback";
+const STATE_COOKIE = "__Host-onenation-dropbox-state";
+const CLEAR_STATE_COOKIE = STATE_COOKIE + "=; Path=/; Max-Age=0; Secure; HttpOnly; SameSite=Lax";
 
 function page(title, message, status = 200) {
   return new Response(
     `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title><body style="font-family:system-ui,sans-serif;max-width:620px;margin:12vh auto;padding:24px;line-height:1.5"><h1>${title}</h1><p>${message}</p><p>You can close this tab and return to OneNation SVG.</p></body></html>`,
-    { status, headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Referrer-Policy": "no-referrer", "X-Content-Type-Options": "nosniff" } }
+    { status, headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Referrer-Policy": "no-referrer", "X-Content-Type-Options": "nosniff", "Set-Cookie": CLEAR_STATE_COOKIE } }
   );
 }
 
@@ -18,16 +20,13 @@ export async function onRequestGet({ request, env }) {
   const code = url.searchParams.get("code");
   const state = url.searchParams.get("state");
   const oauthError = url.searchParams.get("error");
+  const cookieHeader = request.headers.get("Cookie") || "";
+  const stateCookie = cookieHeader.match(/(?:^|;\\s*)__Host-onenation-dropbox-state=([A-Za-z0-9_-]+)/)?.[1];
 
   if (oauthError) return page("Authorization not completed", "Dropbox authorization was cancelled or declined.", 400);
-  if (!code || !state || !/^[A-Za-z0-9_-]{40,60}$/.test(state)) {
-    return page("Invalid authorization response", "The Dropbox authorization response could not be validated.", 400);
+  if (!code || !state || !stateCookie || state !== stateCookie || !/^[A-Za-z0-9_-]{40,60}$/.test(state)) {
+    return page("Invalid authorization response", "The Dropbox authorization response could not be validated. Start the connection again from the OneNation site.", 400);
   }
-
-  const stateKey = "dropbox:oauth-state:" + state;
-  const pending = await env.DROPBOX_KV.get(stateKey);
-  if (!pending) return page("Authorization expired", "This connection request expired or was already used. Start again from the OneNation connection page.", 400);
-  await env.DROPBOX_KV.delete(stateKey);
 
   const body = new URLSearchParams({
     code,
