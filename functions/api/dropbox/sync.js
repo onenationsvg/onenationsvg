@@ -241,23 +241,53 @@ export async function onRequestPost({ request, env }) {
     const authorization = request.headers.get("Authorization") || "";
     if (authorization !== "Bearer " + env.DROPBOX_SYNC_SECRET) return json({ ok: false, error: "Unauthorized." }, 401);
 
+    const url = new URL(request.url);
+    const batchParam = url.searchParams.get("batch");
+    if (batchParam === null || !/^\\d+$/.test(batchParam)) {
+      return json({ ok: false, error: "A non-negative batch number is required." }, 400);
+    }
+    const batch = Number(batchParam);
+    if (!Number.isSafeInteger(batch) || batch < 0) {
+      return json({ ok: false, error: "Invalid batch number." }, 400);
+    }
+
     const accessToken = await getDropboxAccessToken(env);
-    const [{ files: webAssets, excludedNeedsReview }, zipResponse] = await Promise.all([
-      listApprovedWebAssets(accessToken),
-      fetch("https://content.dropboxapi.com/2/files/download", {
+    const { files: webAssets, excludedNeedsReview } = await listApprovedWebAssets(accessToken);
+    const webBatchCount = Math.ceil(webAssets.length / BATCH_SIZE);
+    const totalBatches = webBatchCount + 1;
+    if (batch >= totalBatches) {
+      return json({ ok: false, error: "Batch is outside the current approved asset set.", total_batches: totalBatches }, 400);
+    }
+
+    let sourceFiles;
+    let batchType;
+    let gamingCount = 0;
+    if (batch < webBatchCount) {
+      batchType = "web-ready";
+      const start = batch * BATCH_SIZE;
+      const selected = webAssets.slice(start, start + BATCH_SIZE);
+      sourceFiles = await mapLimit(selected, 3, async file => {
+        const data = await downloadDropboxFile(file.dropboxPath, accessToken);
+        if (data.byteLength !== file.size) throw new Error("Dropbox size check failed for " + file.dropboxPath);
+        return { path: file.path, data };
+      });
+    } else {
+      batchType = "gaming-streetwear";
+      const zipResponse = await fetch("https://content.dropboxapi.com/2/files/download", {
         method: "POST",
         headers: {
           "Authorization": "Bearer " + accessToken,
           "Dropbox-API-Arg": JSON.stringify({ path: ZIP_PATH })
         }
-      })
-    ]);
-    if (!zipResponse.ok) {
-      const detail = await zipResponse.text();
-      throw new Error("Gaming Streetwear ZIP download failed (" + zipResponse.status + "): " + detail.slice(0, 300));
+      });
+      if (!zipResponse.ok) {
+        const detail = await zipResponse.text();
+        throw new Error("Gaming Streetwear ZIP download failed (" + zipResponse.status + "): " + detail.slice(0, 300));
+      }
+      sourceFiles = await extractZip(await zipResponse.arrayBuffer());
+      if (sourceFiles.length !== 10) throw new Error("Expected 10 Gaming Streetwear WebP files, found " + sourceFiles.length + ".");
+      gamingCount = sourceFiles.length;
     }
-    const gamingFiles = await extractZip(await zipResponse.arrayBuffer());
-    if (gamingFiles.length !== 10) throw new Error("Expected 10 Gaming Streetwear WebP files, found " + gamingFiles.length + ".");
 
     const { ref, branchExists } = await getBaseRef(env.GITHUB_TOKEN);
     const parentSha = ref.object.sha;
@@ -268,16 +298,10 @@ export async function onRequestPost({ request, env }) {
       .filter(item => item.type === "blob")
       .map(item => [item.path, item.sha]));
 
-    const downloadedWebFiles = await mapLimit(webAssets, 5, async file => {
-      const data = await downloadDropboxFile(file.dropboxPath, accessToken);
-      if (data.byteLength !== file.size) throw new Error("Dropbox size check failed for " + file.dropboxPath);
-      return { path: file.path, data };
-    });
-    const sourceFiles = downloadedWebFiles.concat(gamingFiles);
     const uniquePaths = new Set(sourceFiles.map(file => file.path));
-    if (uniquePaths.size !== sourceFiles.length) throw new Error("The approved Dropbox asset set contains duplicate target paths.");
+    if (uniquePaths.size !== sourceFiles.length) throw new Error("The approved Dropbox asset batch contains duplicate target paths.");
 
-    const comparisons = await mapLimit(sourceFiles, 5, async file => {
+    const comparisons = await mapLimit(sourceFiles, 3, async file => {
       const sha = await gitBlobSha(file.data);
       return existing.get(file.path) === sha ? null : file;
     });
@@ -287,14 +311,18 @@ export async function onRequestPost({ request, env }) {
     if (changedFiles.length === 0) {
       return json({
         ok: true,
+        batch,
+        total_batches: totalBatches,
+        batch_type: batchType,
+        batch_files: sourceFiles.length,
         branch: branchExists ? BRANCH : "main",
         branch_url: branchExists ? "https://github.com/" + REPO + "/tree/" + BRANCH : "https://github.com/" + REPO,
         updated: 0,
         unchanged: unchangedCount,
         web_ready_files: webAssets.length,
-        gaming_files: gamingFiles.length,
+        gaming_files: gamingCount,
         excluded_needs_review_variants: excludedNeedsReview,
-        message: "All approved Dropbox web-ready assets already match GitHub. No commit was needed."
+        message: "This approved Dropbox batch already matches GitHub. No commit was needed."
       });
     }
 
@@ -305,7 +333,7 @@ export async function onRequestPost({ request, env }) {
       }, env.GITHUB_TOKEN);
     }
 
-    const blobs = await mapLimit(changedFiles, 4, async file => {
+    const blobs = await mapLimit(changedFiles, 3, async file => {
       const blob = await github("/git/blobs", {
         method: "POST",
         body: JSON.stringify({ content: base64(file.data), encoding: "base64" })
@@ -321,7 +349,7 @@ export async function onRequestPost({ request, env }) {
     const commit = await github("/git/commits", {
       method: "POST",
       body: JSON.stringify({
-        message: "Sync approved OneNation web assets from Dropbox",
+        message: "Sync approved OneNation Dropbox assets (batch " + (batch + 1) + "/" + totalBatches + ")",
         tree: tree.sha,
         parents: [parentSha]
       })
@@ -334,16 +362,20 @@ export async function onRequestPost({ request, env }) {
 
     return json({
       ok: true,
+      batch,
+      total_batches: totalBatches,
+      batch_type: batchType,
+      batch_files: sourceFiles.length,
       branch: BRANCH,
       branch_url: "https://github.com/" + REPO + "/tree/" + BRANCH,
       updated: blobs.length,
       unchanged: unchangedCount,
       web_ready_files: webAssets.length,
-      gaming_files: gamingFiles.length,
+      gaming_files: gamingCount,
       excluded_needs_review_variants: excludedNeedsReview,
       files: blobs.map(file => file.path),
       commit: commit.sha,
-      message: "Approved OneNation web-ready assets synced to the staging branch. Production was not changed."
+      message: "Approved OneNation Dropbox batch synced to the staging branch. Production was not changed."
     });
   } catch (error) {
     return json({ ok: false, error: error instanceof Error ? error.message : String(error) }, 500);
