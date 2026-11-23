@@ -1,4 +1,4 @@
-name: Build SVG Culture web assets # trigger asset build
+name: Build SVG Culture web assets
 
 on:
   workflow_dispatch:
@@ -22,10 +22,10 @@ jobs:
       - name: Install WebP encoder
         run: sudo apt-get update && sudo apt-get install -y webp
 
-      - name: Download the 9 protected Dropbox masters through the branch preview worker
+      - name: Download the 9 protected Dropbox masters through production Cloudflare
         env:
           DROPBOX_SYNC_SECRET: ${{ secrets.DROPBOX_SYNC_SECRET }}
-          ASSET_ENDPOINT: https://feature-svg-culture-island-a.onenationsvg-git.pages.dev/api/dropbox/culture-assets
+          ASSET_ENDPOINT: https://onenationsvg.dpdns.org/api/dropbox/culture-assets
         run: |
           set -euo pipefail
           mkdir -p assets/optimized/SVG_Culture_Island_Life
