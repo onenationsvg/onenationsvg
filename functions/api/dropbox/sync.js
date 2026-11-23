@@ -244,7 +244,7 @@ export async function onRequestPost({ request, env }) {
 
     const url = new URL(request.url);
     const batchParam = url.searchParams.get("batch");
-    if (batchParam === null || !/^\\d+$/.test(batchParam)) {
+    if (batchParam === null || !/^\d+$/.test(batchParam)) {
       return json({ ok: false, error: "A non-negative batch number is required." }, 400);
     }
     const batch = Number(batchParam);
