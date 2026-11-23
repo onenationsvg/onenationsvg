@@ -97,83 +97,60 @@ a:focus-visible,.btn:focus-visible,.enquire:focus-visible{outline:3px solid var(
 (function () {
   var page = "holiday";
   var collectionNames = { mens: "Men's Collection", womens: "Women's Collection", holiday: "Holiday Collection" };
+
   function send(name, params) {
     if (typeof window.gtag === 'function') {
-      window.gtag('event', name, Object.assign({ page_type: page }, params || {}));
+      window.gtag('event', name, Object.assign({
+        page_type: page,
+        transport_type: 'beacon'
+      }, params || {}));
     }
   }
-  if (page !== 'homepage') {
-    send('collection_view', { collection_name: collectionNames[page] || page });
-  }
-  function openAfterTracking(url, eventNames) {
-    var popup = window.open('about:blank', '_blank');
-    var finished = false;
-    var pending = eventNames.length;
-    function finish() {
-      if (finished) return;
-      pending -= 1;
-      if (pending > 0) return;
-      finished = true;
-      if (popup && !popup.closed) {
-        popup.location.href = url;
-      } else {
-        window.location.href = url;
-      }
-    }
-    if (typeof window.gtag !== 'function') {
-      if (popup && !popup.closed) popup.location.href = url;
-      else window.location.href = url;
-      return;
-    }
-    eventNames.forEach(function (item) {
-      var params = Object.assign({ page_type: page }, item.params || {}, {
-        event_callback: finish,
-        event_timeout: 900
-      });
-      window.gtag('event', item.name, params);
-    });
-    window.setTimeout(function () {
-      if (finished) return;
-      finished = true;
-      if (popup && !popup.closed) popup.location.href = url;
-      else window.location.href = url;
-    }, 1100);
-  }
+
+  send('collection_view', { collection_name: collectionNames[page] });
+
   document.addEventListener('click', function (event) {
     var control = event.target.closest('a, button');
     if (!control) return;
+
     if (control.matches('a[href^="tel:"]')) {
-      send('phone_click', { link_url: control.href, link_text: (control.innerText || control.getAttribute('aria-label') || 'Phone link').trim() });
+      send('phone_click', {
+        link_url: control.href,
+        link_text: (control.innerText || control.getAttribute('aria-label') || 'Phone link').trim()
+      });
       return;
     }
+
     var isWhatsApp = control.matches('a[href*="wa.me"], a[href*="whatsapp.com"]');
     var isHomeDesignButton = control.matches('button.choose-design');
     if (!isWhatsApp && !isHomeDesignButton) return;
+
     var card = control.closest('.product, .colour, .holiday-card, .drop-card, figure');
     var heading = card && card.querySelector('h2, h3');
     var designName = isHomeDesignButton
       ? (control.dataset.design || 'Homepage design')
       : (heading ? heading.textContent.trim() : (control.innerText || 'General enquiry').trim());
-    var events = [{
-      name: 'whatsapp_click',
-      params: isWhatsApp
-        ? { link_url: control.href, link_text: (control.innerText || control.getAttribute('aria-label') || 'WhatsApp').trim() }
-        : { link_text: 'Choose this design', design_name: designName, link_method: 'window_open' }
-    }];
+
+    send('whatsapp_click', isWhatsApp
+      ? {
+          link_url: control.href,
+          link_text: (control.innerText || control.getAttribute('aria-label') || 'WhatsApp').trim()
+        }
+      : {
+          link_text: 'Choose this design',
+          design_name: designName,
+          link_method: 'window_open'
+        });
+
     if (card || isHomeDesignButton) {
-      events.push({ name: 'design_enquiry', params: { design_name: designName, enquiry_method: 'whatsapp' } });
+      send('design_enquiry', {
+        design_name: designName,
+        enquiry_method: 'whatsapp'
+      });
     }
-    var url;
-    if (isHomeDesignButton) {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      var message = 'Hello One Nation SVG! I am interested in: ' + designName + '.\n\nMy order details:\nGarment size: [please fill in]\nPreferred shirt colour: [please fill in]\nQuantity: [please fill in]\nCustomisation or print notes: [optional]\n\nPlease confirm availability, printing details and the final price before I proceed.';
-      url = 'https://wa.me/17844926777?text=' + encodeURIComponent(message);
-    } else {
-      event.preventDefault();
-      url = control.href;
-    }
-    openAfterTracking(url, events);
+
+    // Keep the original WhatsApp navigation. Beacon transport lets GA4 receive
+    // the click event without delaying or cancelling the user's navigation.
   }, true);
 })();
 </script>
