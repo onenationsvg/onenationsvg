@@ -1,4 +1,4 @@
-name: Build SVG Culture web assets
+name: Build SVG Culture web assets # trigger asset build
 
 on:
   workflow_dispatch:
