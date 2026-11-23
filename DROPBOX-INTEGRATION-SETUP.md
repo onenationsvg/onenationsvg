@@ -1,46 +1,53 @@
-# OneNation SVG — Dropbox OAuth integration
+# OneNation SVG — Dropbox OAuth and staged asset sync
 
-This integration is being verified on the canonical Cloudflare Pages production domain. OAuth is kept server-side and does not expose Dropbox tokens to the browser.
+The Dropbox integration runs on the canonical Cloudflare Pages production domain. OAuth tokens remain server-side and are encrypted before storage.
 
-## What it adds
+## OAuth endpoints
 
-- `/api/dropbox/connect`: starts Dropbox's server-side OAuth 2 authorization-code flow and sets a short-lived, HttpOnly, Secure, SameSite=Lax state cookie.
-- `/api/dropbox/callback`: validates the one-time state against that cookie, exchanges the authorization code server-side, and stores the token encrypted.
-- `/api/dropbox/status`: reports only whether a Dropbox connection exists; it never returns tokens.
-- `functions/_shared/dropbox.js`: encrypts/decrypts the stored token and refreshes short-lived access tokens using the offline refresh token.
+- `/api/dropbox/connect` starts Dropbox's server-side authorization-code flow and sets a short-lived, HttpOnly, Secure, SameSite=Lax state cookie.
+- `/api/dropbox/callback` validates the one-time state, exchanges the authorization code server-side, and stores the encrypted offline token in Cloudflare KV.
+- `/api/dropbox/status` reports only whether a token record exists; it never returns credentials.
+- `functions/_shared/dropbox.js` encrypts/decrypts the token record and refreshes short-lived access tokens.
 
-The callback is fixed to:
+The exact registered callback URI is:
 
-`https://www.onenationsvg.dpdns.org/api/dropbox/callback`
+`https://onenationsvg.dpdns.org/api/dropbox/callback`
 
-Register this exact URI in the Dropbox Developer Console only after this branch has been reviewed, merged, and deployed to the canonical Cloudflare Pages domain.
+Keep the Dropbox app in Development while testing. Do not expose the app secret or access/refresh tokens in GitHub, HTML, browser JavaScript, public issues, or chat.
 
-## Cloudflare Pages configuration
+## Cloudflare Pages production configuration
 
-Create a KV namespace, then add a Pages binding:
+Project: `onenationsvg-git` (production branch: `main`).
 
-- Binding name: `DROPBOX_KV`
-- Namespace: the newly created namespace
+Required production settings:
+- KV binding: `DROPBOX_KV`
+- Variable: `DROPBOX_APP_KEY`
+- Secret: `DROPBOX_APP_SECRET`
+- Secret: `DROPBOX_SYNC_SECRET`
+- Secret: `GITHUB_TOKEN`
 
-Add these settings under the Cloudflare Pages project's production environment:
+The app secret is also used to derive the encryption key for the stored token. Do not rotate it without migrating or re-authorizing the stored token.
 
-- Variable `DROPBOX_APP_KEY`: the Dropbox app key.
-- Secret `DROPBOX_APP_SECRET`: the Dropbox app secret.
+## Dropbox-to-GitHub sync
 
-The token is encrypted before it is stored in KV. The encryption key is derived from the server-only app secret; do not rotate the app secret without first migrating/re-authorizing the stored token.
+The authenticated POST endpoint is `/api/dropbox/sync?batch=N`. It requires an Authorization bearer value matching the server-side `DROPBOX_SYNC_SECRET`. The GitHub Actions workflow `.github/workflows/dropbox-sync.yml` invokes this endpoint manually or on its daily schedule.
 
-Do not put the app secret or any Dropbox access/refresh token in GitHub, HTML, browser JavaScript, a public issue, or a chat message.
+The sync is deliberately staged:
+- It writes only to `staging/dropbox-assets`, never directly to `main`.
+- It accepts WebP assets only from the approved web-ready categories.
+- It excludes `06_Needs_Review`.
+- It enforces file-count and byte-size limits, validates paths, checks duplicate paths and compares file hashes.
+- The separate Gaming Streetwear ZIP batch extracts only WebP files from `assets/optimized/04_Gaming_Streetwear/` and expects exactly 10.
+- It does not publish to Cloudflare production. A separate review and merge is required before assets reach the live site.
 
-## Dropbox Developer Console
+The workflow is scheduled daily at 10:00 UTC and can also be started manually from GitHub Actions. Do not run it until the live status endpoint confirms the Dropbox token record exists and the Dropbox source folder has been reviewed.
 
-After deployment, register the exact callback URI above under Settings > OAuth 2 > Redirect URIs. Keep the app in Development while testing. Keep public clients disabled: this implementation uses a confidential server-side code flow.
+## Verification checklist
 
-## Test
+1. Visit `https://onenationsvg.dpdns.org/api/dropbox/status`; expected response after OAuth is `{"configured":true,"connected":true}`.
+2. Confirm Dropbox OAuth callback displays “Dropbox connected”.
+3. Before a sync, verify the expected approved WebP files exist under the configured web-ready folder and the Gaming Streetwear ZIP exists at the configured source path.
+4. Run the GitHub Actions workflow only when ready to create/update the staging branch.
+5. Review `staging/dropbox-assets` and its file diff before opening a pull request to `main`.
 
-1. Visit `https://www.onenationsvg.dpdns.org/api/dropbox/status`; before setup it should report not configured.
-2. After Cloudflare configuration and deployment, visit `https://www.onenationsvg.dpdns.org/api/dropbox/connect`.
-3. Approve the requested Dropbox scopes in Dropbox.
-4. Confirm the callback displays “Dropbox connected”.
-5. Visit `/api/dropbox/status` and confirm `connected: true`.
-
-This stage establishes secure Dropbox authorization only. GitHub write credentials and the actual reviewed asset-sync job are a separate stage; no website assets are copied or overwritten by this OAuth callback.
+OAuth authorization alone does not run the asset sync or publish website changes.
