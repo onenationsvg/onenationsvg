@@ -14,7 +14,7 @@ const APPROVED_CATEGORIES = new Set([
 const MAX_FILES = 300;
 const MAX_FILE_BYTES = 15 * 1024 * 1024;
 const MAX_TOTAL_BYTES = 100 * 1024 * 1024;
-const BATCH_SIZE = 6;
+const BATCH_SIZE = 4;
 
 function json(data, status = 200) {
   return Response.json(data, {
@@ -267,7 +267,7 @@ export async function onRequestPost({ request, env }) {
       batchType = "web-ready";
       const start = batch * BATCH_SIZE;
       const selected = webAssets.slice(start, start + BATCH_SIZE);
-      sourceFiles = await mapLimit(selected, 3, async file => {
+      sourceFiles = await mapLimit(selected, 2, async file => {
         const data = await downloadDropboxFile(file.dropboxPath, accessToken);
         if (data.byteLength !== file.size) throw new Error("Dropbox size check failed for " + file.dropboxPath);
         return { path: file.path, data };
@@ -302,7 +302,7 @@ export async function onRequestPost({ request, env }) {
     const uniquePaths = new Set(sourceFiles.map(file => file.path));
     if (uniquePaths.size !== sourceFiles.length) throw new Error("The approved Dropbox asset batch contains duplicate target paths.");
 
-    const comparisons = await mapLimit(sourceFiles, 3, async file => {
+    const comparisons = await mapLimit(sourceFiles, 2, async file => {
       const sha = await gitBlobSha(file.data);
       return existing.get(file.path) === sha ? null : file;
     });
@@ -334,7 +334,7 @@ export async function onRequestPost({ request, env }) {
       }, env.GITHUB_TOKEN);
     }
 
-    const blobs = await mapLimit(changedFiles, 3, async file => {
+    const blobs = await mapLimit(changedFiles, 1, async file => {
       const blob = await github("/git/blobs", {
         method: "POST",
         body: JSON.stringify({ content: base64(file.data), encoding: "base64" })
