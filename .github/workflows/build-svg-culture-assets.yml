@@ -2,6 +2,9 @@ name: Build SVG Culture web assets
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - feature/svg-culture-island-assets
 
 permissions:
   contents: write
