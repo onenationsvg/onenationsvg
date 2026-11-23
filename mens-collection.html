@@ -69,4 +69,45 @@ footer{border-top:1px solid var(--line);padding:28px 7vw;color:var(--muted);font
 <p class="note">If your browser does not display the embedded catalogue, use “Open PDF” above.</p>
 </section>
 <section class="order" id="order"><div class="eyebrow">How to order</div><h2>REPRESENT YOUR NATION.</h2><p>Choose a design, contact OneNation S.V.G., then confirm shirt colour, available size, print details and final price.</p><p><strong>*Standard-size custom printing starts at EC$65.</strong> Final pricing depends on design, print size and order details.</p><a class="btn" href="https://wa.me/17844926777?text=Hello%20OneNation%20SVG%2C%20I%27d%20like%20to%20order%20from%20the%20Men%27s%20Collection." target="_blank" rel="noopener">Order on WhatsApp ↗</a></section>
-</main><footer>ONENATION S.V.G. · OUR PEOPLE · OUR CULTURE · OUR IDENTITY</footer></body></html>
+</main><footer>ONENATION S.V.G. · OUR PEOPLE · OUR CULTURE · OUR IDENTITY</footer><script>
+(function () {
+  var page = "mens";
+  var collectionNames = { mens: "Men's Collection", womens: "Women's Collection", holiday: "Holiday Collection" };
+  function send(name, params) {
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', name, Object.assign({ page_type: page }, params || {}));
+    }
+  }
+  if (page !== 'homepage') {
+    send('collection_view', { collection_name: collectionNames[page] || page });
+  }
+  document.addEventListener('click', function (event) {
+    var control = event.target.closest('a, button');
+    if (!control) return;
+    if (control.matches('a[href^="tel:"]')) {
+      send('phone_click', { link_url: control.href, link_text: (control.innerText || control.getAttribute('aria-label') || 'Phone link').trim() });
+      return;
+    }
+    var isWhatsApp = control.matches('a[href*="wa.me"], a[href*="whatsapp.com"]');
+    var isHomeDesignButton = control.matches('button.choose-design');
+    if (!isWhatsApp && !isHomeDesignButton) return;
+    var card = control.closest('.product, .colour, .holiday-card, .drop-card, figure');
+    var heading = card && card.querySelector('h2, h3');
+    var designName = isHomeDesignButton
+      ? (control.dataset.design || 'Homepage design')
+      : (heading ? heading.textContent.trim() : (control.innerText || 'General enquiry').trim());
+    if (isWhatsApp) {
+      send('whatsapp_click', {
+        link_url: control.href,
+        link_text: (control.innerText || control.getAttribute('aria-label') || 'WhatsApp').trim()
+      });
+    } else {
+      send('whatsapp_click', { link_text: 'Choose this design', design_name: designName, link_method: 'window_open' });
+    }
+    if (card || isHomeDesignButton) {
+      send('design_enquiry', { design_name: designName, enquiry_method: 'whatsapp' });
+    }
+  }, true);
+})();
+</script>
+</body></html>

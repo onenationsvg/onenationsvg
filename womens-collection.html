@@ -55,4 +55,45 @@ footer{border-top:1px solid var(--line);padding:28px 7vw;color:var(--muted);font
 <article class="colour"><picture><source type="image/webp" srcset="assets/optimized/02_Apparel_and_Merchandise/onenation-womens-white-model-1/onenation-womens-white-model-1-480w.webp 480w, assets/optimized/02_Apparel_and_Merchandise/onenation-womens-white-model-1/onenation-womens-white-model-1-960w.webp 960w" sizes="(max-width: 600px) 100vw, 50vw"><img class="model" src="assets/onenation-womens-white-model.png" alt="OneNation women's white model wearing the One Nation SVG design" decoding="async" loading="lazy"></picture><h3>White Model</h3><p>Women's white model colourway supplied for the collection.</p><a class="colour-order" href="https://wa.me/17844926777?text=Hello%20OneNation%20SVG%2C%20I%20am%20interested%20in%20the%20Women's%20Collection%20%E2%80%94%20White%20Model.%20Garment%20size%3A%20%5Bplease%20fill%20in%5D.%20Quantity%3A%20%5Bplease%20fill%20in%5D.%20Customisation%20or%20print%20notes%3A%20%5Boptional%5D.%20Please%20confirm%20availability%2C%20printing%20details%20and%20final%20price%20before%20I%20proceed." target="_blank" rel="noopener">Ask about this colourway ↗</a></article>
 </div></section>
 <section class="order" id="order"><div class="eyebrow">How to order</div><h2>REPRESENT YOUR NATION.</h2><div class="price">From EC$65*</div><p>Choose a women's colourway or share your preferred design. Contact OneNation S.V.G. to confirm garment colour, size, print details, availability and final price.</p><a class="btn" href="https://wa.me/17844926777?text=Hello%20OneNation%20SVG%2C%20I%27d%20like%20to%20ask%20about%20the%20Women%27s%20Collection." target="_blank" rel="noopener">Order on WhatsApp ↗</a><p><strong>*Standard-size custom printing starts at EC$65.</strong> Final pricing depends on design, print size and order details.</p></section>
-</main><footer>ONENATION S.V.G. · ONE PEOPLE · ONE CULTURE · ONE NATION</footer></body></html>
+</main><footer>ONENATION S.V.G. · ONE PEOPLE · ONE CULTURE · ONE NATION</footer><script>
+(function () {
+  var page = "womens";
+  var collectionNames = { mens: "Men's Collection", womens: "Women's Collection", holiday: "Holiday Collection" };
+  function send(name, params) {
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', name, Object.assign({ page_type: page }, params || {}));
+    }
+  }
+  if (page !== 'homepage') {
+    send('collection_view', { collection_name: collectionNames[page] || page });
+  }
+  document.addEventListener('click', function (event) {
+    var control = event.target.closest('a, button');
+    if (!control) return;
+    if (control.matches('a[href^="tel:"]')) {
+      send('phone_click', { link_url: control.href, link_text: (control.innerText || control.getAttribute('aria-label') || 'Phone link').trim() });
+      return;
+    }
+    var isWhatsApp = control.matches('a[href*="wa.me"], a[href*="whatsapp.com"]');
+    var isHomeDesignButton = control.matches('button.choose-design');
+    if (!isWhatsApp && !isHomeDesignButton) return;
+    var card = control.closest('.product, .colour, .holiday-card, .drop-card, figure');
+    var heading = card && card.querySelector('h2, h3');
+    var designName = isHomeDesignButton
+      ? (control.dataset.design || 'Homepage design')
+      : (heading ? heading.textContent.trim() : (control.innerText || 'General enquiry').trim());
+    if (isWhatsApp) {
+      send('whatsapp_click', {
+        link_url: control.href,
+        link_text: (control.innerText || control.getAttribute('aria-label') || 'WhatsApp').trim()
+      });
+    } else {
+      send('whatsapp_click', { link_text: 'Choose this design', design_name: designName, link_method: 'window_open' });
+    }
+    if (card || isHomeDesignButton) {
+      send('design_enquiry', { design_name: designName, enquiry_method: 'whatsapp' });
+    }
+  }, true);
+})();
+</script>
+</body></html>

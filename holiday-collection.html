@@ -1,6 +1,14 @@
 <!doctype html>
 <html lang="en">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LN1ZL3CN25"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-LN1ZL3CN25');
+</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Explore the OneNation S.V.G. holiday artwork collection. View designs and enquire about custom printing, sizes and pricing.">
@@ -50,4 +58,45 @@ a:focus-visible,.btn:focus-visible,.enquire:focus-visible{outline:3px solid var(
 </main>
 <footer><span>© <span id="year">2026</span> OneNation S.V.G.</span><a href="copyright.html">Copyright & permissions</a><a href="index.html">Main website</a></footer>
 <script>document.getElementById('year').textContent=new Date().getFullYear();</script>
+<script>
+(function () {
+  var page = "holiday";
+  var collectionNames = { mens: "Men's Collection", womens: "Women's Collection", holiday: "Holiday Collection" };
+  function send(name, params) {
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', name, Object.assign({ page_type: page }, params || {}));
+    }
+  }
+  if (page !== 'homepage') {
+    send('collection_view', { collection_name: collectionNames[page] || page });
+  }
+  document.addEventListener('click', function (event) {
+    var control = event.target.closest('a, button');
+    if (!control) return;
+    if (control.matches('a[href^="tel:"]')) {
+      send('phone_click', { link_url: control.href, link_text: (control.innerText || control.getAttribute('aria-label') || 'Phone link').trim() });
+      return;
+    }
+    var isWhatsApp = control.matches('a[href*="wa.me"], a[href*="whatsapp.com"]');
+    var isHomeDesignButton = control.matches('button.choose-design');
+    if (!isWhatsApp && !isHomeDesignButton) return;
+    var card = control.closest('.product, .colour, .holiday-card, .drop-card, figure');
+    var heading = card && card.querySelector('h2, h3');
+    var designName = isHomeDesignButton
+      ? (control.dataset.design || 'Homepage design')
+      : (heading ? heading.textContent.trim() : (control.innerText || 'General enquiry').trim());
+    if (isWhatsApp) {
+      send('whatsapp_click', {
+        link_url: control.href,
+        link_text: (control.innerText || control.getAttribute('aria-label') || 'WhatsApp').trim()
+      });
+    } else {
+      send('whatsapp_click', { link_text: 'Choose this design', design_name: designName, link_method: 'window_open' });
+    }
+    if (card || isHomeDesignButton) {
+      send('design_enquiry', { design_name: designName, enquiry_method: 'whatsapp' });
+    }
+  }, true);
+})();
+</script>
 </body></html>
