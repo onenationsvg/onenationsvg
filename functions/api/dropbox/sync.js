@@ -1,9 +1,19 @@
 import { getDropboxAccessToken } from "../../_shared/dropbox.js";
 
 const REPO = "onenationsvg/onenationsvg";
-const BRANCH = "feature/dropbox-github-sync";
+const BRANCH = "staging/dropbox-assets";
 const ZIP_PATH = "/OneNation SVG/Website Assets/Gaming Streetwear/onenation-gaming-streetwear-assets.zip";
-const ASSET_PREFIX = "assets/optimized/04_Gaming_Streetwear/";
+const WEB_READY_PATH = "/OneNation SVG/Website Assets/Men's Collection/OneNation_Performance_Upgrade_Review/OneNation_Performance_Upgrade_Review/web-ready";
+const WEB_READY_PREFIX = WEB_READY_PATH + "/";
+const APPROVED_CATEGORIES = new Set([
+  "01_Brand_Identity",
+  "02_Apparel_and_Merchandise",
+  "03_Holiday_Collections",
+  "04_Marketing_and_Promotion"
+]);
+const MAX_FILES = 300;
+const MAX_FILE_BYTES = 15 * 1024 * 1024;
+const MAX_TOTAL_BYTES = 100 * 1024 * 1024;
 
 function json(data, status = 200) {
   return Response.json(data, {
@@ -94,6 +104,94 @@ async function github(path, options, token) {
   return body;
 }
 
+async function dropboxApi(endpoint, accessToken, payload) {
+  const response = await fetch("https://api.dropboxapi.com/2/files/" + endpoint, {
+    method: "POST",
+    headers: {
+      "Authorization": "Bearer " + accessToken,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
+  });
+  const text = await response.text();
+  let body;
+  try { body = JSON.parse(text); } catch { body = { raw: text }; }
+  if (!response.ok) throw new Error("Dropbox " + response.status + ": " + (body.error_summary || text.slice(0, 300)));
+  return body;
+}
+
+async function listApprovedWebAssets(accessToken) {
+  let page = await dropboxApi("list_folder", accessToken, {
+    path: WEB_READY_PATH,
+    recursive: true,
+    include_deleted: false,
+    limit: 2000
+  });
+  const entries = [...(page.entries || [])];
+  while (page.has_more) {
+    if (!page.cursor) throw new Error("Dropbox returned more assets without a continuation cursor.");
+    page = await dropboxApi("list_folder/continue", accessToken, { cursor: page.cursor });
+    entries.push(...(page.entries || []));
+    if (entries.length > 5000) throw new Error("Dropbox asset listing exceeded the safety limit.");
+  }
+
+  const webFiles = [];
+  let excludedNeedsReview = 0;
+  let totalBytes = 0;
+  for (const entry of entries) {
+    if (entry[".tag"] !== "file" || !/\.webp$/i.test(entry.name || "")) continue;
+    const displayPath = entry.path_display;
+    if (!displayPath || !displayPath.startsWith(WEB_READY_PREFIX)) {
+      throw new Error("A Dropbox web-ready asset has no valid display path.");
+    }
+    const relative = displayPath.slice(WEB_READY_PREFIX.length);
+    const parts = relative.split("/");
+    if (parts.some(part => !part || part === "." || part === "..")) {
+      throw new Error("Dropbox returned an unsafe asset path.");
+    }
+    if (parts[0] === "06_Needs_Review") {
+      excludedNeedsReview++;
+      continue;
+    }
+    if (!APPROVED_CATEGORIES.has(parts[0])) continue;
+    if (parts.length < 2) throw new Error("A web-ready asset is outside its category folder.");
+    const size = Number(entry.size || 0);
+    if (!Number.isFinite(size) || size <= 0 || size > MAX_FILE_BYTES) {
+      throw new Error("Dropbox asset has an invalid or oversized file: " + displayPath);
+    }
+    totalBytes += size;
+    if (totalBytes > MAX_TOTAL_BYTES) throw new Error("Approved Dropbox assets exceed the 100 MB sync safety limit.");
+    webFiles.push({
+      path: "assets/optimized/" + relative,
+      dropboxPath: displayPath,
+      size
+    });
+  }
+
+  if (webFiles.length < 100 || webFiles.length > MAX_FILES) {
+    throw new Error("Expected between 100 and " + MAX_FILES + " approved web-ready files, found " + webFiles.length + ".");
+  }
+  const paths = new Set(webFiles.map(file => file.path));
+  if (paths.size !== webFiles.length) throw new Error("Dropbox returned duplicate web-ready asset paths.");
+  webFiles.sort((a, b) => a.path.localeCompare(b.path));
+  return { files: webFiles, excludedNeedsReview };
+}
+
+async function downloadDropboxFile(path, accessToken) {
+  const response = await fetch("https://content.dropboxapi.com/2/files/download", {
+    method: "POST",
+    headers: {
+      "Authorization": "Bearer " + accessToken,
+      "Dropbox-API-Arg": JSON.stringify({ path })
+    }
+  });
+  if (!response.ok) {
+    const detail = await response.text();
+    throw new Error("Dropbox download failed (" + response.status + "): " + detail.slice(0, 300));
+  }
+  return new Uint8Array(await response.arrayBuffer());
+}
+
 function base64(bytes) {
   let out = "";
   const chunk = 0x8000;
@@ -103,39 +201,117 @@ function base64(bytes) {
   return btoa(out);
 }
 
+async function gitBlobSha(data) {
+  const header = new TextEncoder().encode("blob " + data.byteLength + "\0");
+  const payload = new Uint8Array(header.length + data.length);
+  payload.set(header, 0);
+  payload.set(data, header.length);
+  const digest = await crypto.subtle.digest("SHA-1", payload);
+  return Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");
+}
+
+async function mapLimit(items, limit, fn) {
+  const results = new Array(items.length);
+  let next = 0;
+  const workers = Array.from({ length: Math.min(limit, items.length) }, async () => {
+    while (true) {
+      const index = next++;
+      if (index >= items.length) return;
+      results[index] = await fn(items[index], index);
+    }
+  });
+  await Promise.all(workers);
+  return results;
+}
+
+async function getBaseRef(token) {
+  try {
+    const ref = await github("/git/ref/heads/" + encodeURIComponent(BRANCH), { method: "GET" }, token);
+    return { ref, branchExists: true };
+  } catch (error) {
+    if (!String(error).includes("GitHub 404")) throw error;
+    const mainRef = await github("/git/ref/heads/main", { method: "GET" }, token);
+    return { ref: mainRef, branchExists: false };
+  }
+}
+
 export async function onRequestPost({ request, env }) {
   try {
     if (!env.GITHUB_TOKEN || !env.DROPBOX_SYNC_SECRET) return json({ ok: false, error: "GitHub sync is not configured." }, 503);
     const authorization = request.headers.get("Authorization") || "";
     if (authorization !== "Bearer " + env.DROPBOX_SYNC_SECRET) return json({ ok: false, error: "Unauthorized." }, 401);
+
     const accessToken = await getDropboxAccessToken(env);
-
-    const download = await fetch("https://content.dropboxapi.com/2/files/download", {
-      method: "POST",
-      headers: {
-        "Authorization": "Bearer " + accessToken,
-        "Dropbox-API-Arg": JSON.stringify({ path: ZIP_PATH })
-      }
-    });
-    if (!download.ok) {
-      const detail = await download.text();
-      throw new Error("Dropbox download failed (" + download.status + "): " + detail.slice(0, 300));
+    const [{ files: webAssets, excludedNeedsReview }, zipResponse] = await Promise.all([
+      listApprovedWebAssets(accessToken),
+      fetch("https://content.dropboxapi.com/2/files/download", {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+          "Dropbox-API-Arg": JSON.stringify({ path: ZIP_PATH })
+        }
+      })
+    ]);
+    if (!zipResponse.ok) {
+      const detail = await zipResponse.text();
+      throw new Error("Gaming Streetwear ZIP download failed (" + zipResponse.status + "): " + detail.slice(0, 300));
     }
+    const gamingFiles = await extractZip(await zipResponse.arrayBuffer());
+    if (gamingFiles.length !== 10) throw new Error("Expected 10 Gaming Streetwear WebP files, found " + gamingFiles.length + ".");
 
-    const files = await extractZip(await download.arrayBuffer());
-    if (files.length !== 10) throw new Error("Expected 10 Gaming Streetwear WebP files, found " + files.length + ".");
-
-    const ref = await github("/git/ref/heads/" + encodeURIComponent(BRANCH), { method: "GET" }, env.GITHUB_TOKEN);
+    const { ref, branchExists } = await getBaseRef(env.GITHUB_TOKEN);
     const parentSha = ref.object.sha;
     const parentCommit = await github("/git/commits/" + parentSha, { method: "GET" }, env.GITHUB_TOKEN);
-    const blobs = [];
-    for (const file of files) {
+    const currentTree = await github("/git/trees/" + parentCommit.tree.sha + "?recursive=1", { method: "GET" }, env.GITHUB_TOKEN);
+    if (currentTree.truncated) throw new Error("GitHub asset tree was truncated; refusing an incomplete sync.");
+    const existing = new Map((currentTree.tree || [])
+      .filter(item => item.type === "blob")
+      .map(item => [item.path, item.sha]));
+
+    const downloadedWebFiles = await mapLimit(webAssets, 5, async file => {
+      const data = await downloadDropboxFile(file.dropboxPath, accessToken);
+      if (data.byteLength !== file.size) throw new Error("Dropbox size check failed for " + file.dropboxPath);
+      return { path: file.path, data };
+    });
+    const sourceFiles = downloadedWebFiles.concat(gamingFiles);
+    const uniquePaths = new Set(sourceFiles.map(file => file.path));
+    if (uniquePaths.size !== sourceFiles.length) throw new Error("The approved Dropbox asset set contains duplicate target paths.");
+
+    const comparisons = await mapLimit(sourceFiles, 5, async file => {
+      const sha = await gitBlobSha(file.data);
+      return existing.get(file.path) === sha ? null : file;
+    });
+    const changedFiles = comparisons.filter(Boolean);
+    const unchangedCount = sourceFiles.length - changedFiles.length;
+
+    if (changedFiles.length === 0) {
+      return json({
+        ok: true,
+        branch: branchExists ? BRANCH : "main",
+        branch_url: branchExists ? "https://github.com/" + REPO + "/tree/" + BRANCH : "https://github.com/" + REPO,
+        updated: 0,
+        unchanged: unchangedCount,
+        web_ready_files: webAssets.length,
+        gaming_files: gamingFiles.length,
+        excluded_needs_review_variants: excludedNeedsReview,
+        message: "All approved Dropbox web-ready assets already match GitHub. No commit was needed."
+      });
+    }
+
+    if (!branchExists) {
+      await github("/git/refs", {
+        method: "POST",
+        body: JSON.stringify({ ref: "refs/heads/" + BRANCH, sha: parentSha })
+      }, env.GITHUB_TOKEN);
+    }
+
+    const blobs = await mapLimit(changedFiles, 4, async file => {
       const blob = await github("/git/blobs", {
         method: "POST",
         body: JSON.stringify({ content: base64(file.data), encoding: "base64" })
       }, env.GITHUB_TOKEN);
-      blobs.push({ path: file.path, mode: "100644", type: "blob", sha: blob.sha });
-    }
+      return { path: file.path, mode: "100644", type: "blob", sha: blob.sha };
+    });
 
     const tree = await github("/git/trees", {
       method: "POST",
@@ -145,7 +321,7 @@ export async function onRequestPost({ request, env }) {
     const commit = await github("/git/commits", {
       method: "POST",
       body: JSON.stringify({
-        message: "Add Gaming Streetwear optimized assets from Dropbox",
+        message: "Sync approved OneNation web assets from Dropbox",
         tree: tree.sha,
         parents: [parentSha]
       })
@@ -159,9 +335,15 @@ export async function onRequestPost({ request, env }) {
     return json({
       ok: true,
       branch: BRANCH,
-      files: blobs.map(x => x.path),
+      branch_url: "https://github.com/" + REPO + "/tree/" + BRANCH,
+      updated: blobs.length,
+      unchanged: unchangedCount,
+      web_ready_files: webAssets.length,
+      gaming_files: gamingFiles.length,
+      excluded_needs_review_variants: excludedNeedsReview,
+      files: blobs.map(file => file.path),
       commit: commit.sha,
-      message: "Gaming Streetwear assets synced to the staging branch."
+      message: "Approved OneNation web-ready assets synced to the staging branch. Production was not changed."
     });
   } catch (error) {
     return json({ ok: false, error: error instanceof Error ? error.message : String(error) }, 500);
