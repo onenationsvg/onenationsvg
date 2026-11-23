@@ -1,6 +1,6 @@
 import { encryptToken, TOKEN_KEY } from "../../_shared/dropbox.js";
 
-const REDIRECT_URI = "https://www.onenation-svg.eu.org/api/dropbox/callback";
+const REDIRECT_URI = "https://onenationsvg.dpdns.org/api/dropbox/callback";
 const STATE_COOKIE = "__Host-onenation-dropbox-state";
 const CLEAR_STATE_COOKIE = STATE_COOKIE + "=; Path=/; Max-Age=0; Secure; HttpOnly; SameSite=Lax";
 
