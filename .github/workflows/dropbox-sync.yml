@@ -62,7 +62,7 @@ jobs:
           fi
 
           if [[ "${total_batches}" -gt 76 ]]; then
-            echo "The sync endpoint requested more than 51 batches; refusing unexpected work."
+            echo "The sync endpoint requested more than 76 batches; refusing unexpected work."
             exit 1
           fi
 
