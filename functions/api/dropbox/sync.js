@@ -290,7 +290,7 @@ export async function onRequestPost({ request, env }) {
       gamingCount = sourceFiles.length;
     }
 
-    const { ref, branchExists } = await getBaseRef(env.GITHUB_TOKEN);
+    let { ref, branchExists } = await getBaseRef(env.GITHUB_TOKEN);
     const parentSha = ref.object.sha;
     const parentCommit = await github("/git/commits/" + parentSha, { method: "GET" }, env.GITHUB_TOKEN);
     const currentTree = await github("/git/trees/" + parentCommit.tree.sha + "?recursive=1", { method: "GET" }, env.GITHUB_TOKEN);
@@ -309,6 +309,15 @@ export async function onRequestPost({ request, env }) {
     const changedFiles = comparisons.filter(Boolean);
     const unchangedCount = sourceFiles.length - changedFiles.length;
 
+    if (!branchExists) {
+      await github("/git/refs", {
+        method: "POST",
+        body: JSON.stringify({ ref: "refs/heads/" + BRANCH, sha: parentSha })
+      }, env.GITHUB_TOKEN);
+    }
+
+    branchExists = true;
+
     if (changedFiles.length === 0) {
       return json({
         ok: true,
@@ -325,13 +334,6 @@ export async function onRequestPost({ request, env }) {
         excluded_needs_review_variants: excludedNeedsReview,
         message: "This approved Dropbox batch already matches GitHub. No commit was needed."
       });
-    }
-
-    if (!branchExists) {
-      await github("/git/refs", {
-        method: "POST",
-        body: JSON.stringify({ ref: "refs/heads/" + BRANCH, sha: parentSha })
-      }, env.GITHUB_TOKEN);
     }
 
     const blobs = await mapLimit(changedFiles, 1, async file => {
