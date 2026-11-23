@@ -1,0 +1,68 @@
+name: Build SVG Culture web assets
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/svg-culture-island-assets
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/svg-culture-island-assets
+          fetch-depth: 0
+
+      - name: Install WebP encoder
+        run: sudo apt-get update && sudo apt-get install -y webp
+
+      - name: Download the 9 protected Dropbox masters through production Cloudflare
+        env:
+          DROPBOX_SYNC_SECRET: ${{ secrets.DROPBOX_SYNC_SECRET }}
+          ASSET_ENDPOINT: https://onenationsvg.dpdns.org/api/dropbox/culture-assets
+        run: |
+          set -euo pipefail
+          mkdir -p assets/optimized/SVG_Culture_Island_Life
+          for i in {0..8}; do
+            name="IMG-20261123-WA$(printf '%04d' "$i").jpg"
+            echo "Downloading $name"
+            curl --fail --silent --show-error \
+              -H "Authorization: Bearer ${DROPBOX_SYNC_SECRET}" \
+              --output "assets/optimized/SVG_Culture_Island_Life/${name}" \
+              "${ASSET_ENDPOINT}?name=${name}"
+          done
+
+      - name: Convert masters to optimized WebP
+        run: |
+          set -euo pipefail
+          for jpg in assets/optimized/SVG_Culture_Island_Life/*.jpg; do
+            out="${jpg%.jpg}.webp"
+            cwebp -q 82 -m 6 -mt -af -metadata none "$jpg" -o "$out"
+            rm "$jpg"
+          done
+
+      - name: Verify generated assets
+        run: |
+          set -euo pipefail
+          count=$(find assets/optimized/SVG_Culture_Island_Life -type f -name '*.webp' | wc -l)
+          test "$count" -eq 9
+          find assets/optimized/SVG_Culture_Island_Life -type f -name '*.webp' -print
+
+      - name: Commit optimized artwork to the feature branch
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/optimized/SVG_Culture_Island_Life
+          if git diff --cached --quiet; then
+            echo "No asset changes to commit."
+            exit 0
+          fi
+          git commit -m "Add optimized SVG Culture artwork assets"
+          git push origin feature/svg-culture-island-assets
