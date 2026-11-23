@@ -115,4 +115,45 @@ footer{padding:28px 8vw;border-top:1px solid var(--line);display:flex;justify-co
  const toggle=document.querySelector('.mobile-menu-toggle'),nav=document.querySelector('header nav');function closeMenu(restoreFocus=false){nav.classList.remove('menu-open');toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label','Open navigation');toggle.textContent='Menu';if(restoreFocus)toggle.focus()}toggle.addEventListener('click',()=>{const open=nav.classList.toggle('menu-open');toggle.setAttribute('aria-expanded',String(open));toggle.setAttribute('aria-label',open?'Close navigation':'Open navigation');toggle.textContent=open?'Close':'Menu';if(open){nav.querySelector('a').focus()}});nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>closeMenu(true)));document.addEventListener('keydown',e=>{if(e.key==='Escape'&&nav.classList.contains('menu-open'))closeMenu(true)});
 })();
 </script>
+<script>
+(function () {
+  var page = "homepage";
+  var collectionNames = { mens: "Men's Collection", womens: "Women's Collection", holiday: "Holiday Collection" };
+  function send(name, params) {
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', name, Object.assign({ page_type: page }, params || {}));
+    }
+  }
+  if (page !== 'homepage') {
+    send('collection_view', { collection_name: collectionNames[page] || page });
+  }
+  document.addEventListener('click', function (event) {
+    var control = event.target.closest('a, button');
+    if (!control) return;
+    if (control.matches('a[href^="tel:"]')) {
+      send('phone_click', { link_url: control.href, link_text: (control.innerText || control.getAttribute('aria-label') || 'Phone link').trim() });
+      return;
+    }
+    var isWhatsApp = control.matches('a[href*="wa.me"], a[href*="whatsapp.com"]');
+    var isHomeDesignButton = control.matches('button.choose-design');
+    if (!isWhatsApp && !isHomeDesignButton) return;
+    var card = control.closest('.product, .colour, .holiday-card, .drop-card, figure');
+    var heading = card && card.querySelector('h2, h3');
+    var designName = isHomeDesignButton
+      ? (control.dataset.design || 'Homepage design')
+      : (heading ? heading.textContent.trim() : (control.innerText || 'General enquiry').trim());
+    if (isWhatsApp) {
+      send('whatsapp_click', {
+        link_url: control.href,
+        link_text: (control.innerText || control.getAttribute('aria-label') || 'WhatsApp').trim()
+      });
+    } else {
+      send('whatsapp_click', { link_text: 'Choose this design', design_name: designName, link_method: 'window_open' });
+    }
+    if (card || isHomeDesignButton) {
+      send('design_enquiry', { design_name: designName, enquiry_method: 'whatsapp' });
+    }
+  }, true);
+})();
+</script>
 </body></html>
