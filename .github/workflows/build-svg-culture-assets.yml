@@ -25,7 +25,7 @@ jobs:
       - name: Download the 9 protected Dropbox masters through the branch preview worker
         env:
           DROPBOX_SYNC_SECRET: ${{ secrets.DROPBOX_SYNC_SECRET }}
-          ASSET_ENDPOINT: https://feature-svg-culture-island-assets.onenationsvg-git.pages.dev/api/dropbox/culture-assets
+          ASSET_ENDPOINT: https://feature-svg-culture-island-a.onenationsvg-git.pages.dev/api/dropbox/culture-assets
         run: |
           set -euo pipefail
           mkdir -p assets/optimized/SVG_Culture_Island_Life
