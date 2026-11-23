@@ -1,6 +1,6 @@
 # OneNation SVG — Dropbox OAuth integration
 
-This integration is being introduced on the `feature/dropbox-oauth-connection` branch. It does not alter the production website until reviewed and merged.
+This integration is being verified on the canonical Cloudflare Pages production domain. OAuth is kept server-side and does not expose Dropbox tokens to the browser.
 
 ## What it adds
 
