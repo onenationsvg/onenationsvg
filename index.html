@@ -127,6 +127,40 @@ footer{padding:28px 8vw;border-top:1px solid var(--line);display:flex;justify-co
   if (page !== 'homepage') {
     send('collection_view', { collection_name: collectionNames[page] || page });
   }
+  function openAfterTracking(url, eventNames) {
+    var popup = window.open('about:blank', '_blank');
+    var finished = false;
+    var pending = eventNames.length;
+    function finish() {
+      if (finished) return;
+      pending -= 1;
+      if (pending > 0) return;
+      finished = true;
+      if (popup && !popup.closed) {
+        popup.location.href = url;
+      } else {
+        window.location.href = url;
+      }
+    }
+    if (typeof window.gtag !== 'function') {
+      if (popup && !popup.closed) popup.location.href = url;
+      else window.location.href = url;
+      return;
+    }
+    eventNames.forEach(function (item) {
+      var params = Object.assign({ page_type: page }, item.params || {}, {
+        event_callback: finish,
+        event_timeout: 900
+      });
+      window.gtag('event', item.name, params);
+    });
+    window.setTimeout(function () {
+      if (finished) return;
+      finished = true;
+      if (popup && !popup.closed) popup.location.href = url;
+      else window.location.href = url;
+    }, 1100);
+  }
   document.addEventListener('click', function (event) {
     var control = event.target.closest('a, button');
     if (!control) return;
@@ -142,17 +176,26 @@ footer{padding:28px 8vw;border-top:1px solid var(--line);display:flex;justify-co
     var designName = isHomeDesignButton
       ? (control.dataset.design || 'Homepage design')
       : (heading ? heading.textContent.trim() : (control.innerText || 'General enquiry').trim());
-    if (isWhatsApp) {
-      send('whatsapp_click', {
-        link_url: control.href,
-        link_text: (control.innerText || control.getAttribute('aria-label') || 'WhatsApp').trim()
-      });
-    } else {
-      send('whatsapp_click', { link_text: 'Choose this design', design_name: designName, link_method: 'window_open' });
-    }
+    var events = [{
+      name: 'whatsapp_click',
+      params: isWhatsApp
+        ? { link_url: control.href, link_text: (control.innerText || control.getAttribute('aria-label') || 'WhatsApp').trim() }
+        : { link_text: 'Choose this design', design_name: designName, link_method: 'window_open' }
+    }];
     if (card || isHomeDesignButton) {
-      send('design_enquiry', { design_name: designName, enquiry_method: 'whatsapp' });
+      events.push({ name: 'design_enquiry', params: { design_name: designName, enquiry_method: 'whatsapp' } });
     }
+    var url;
+    if (isHomeDesignButton) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      var message = 'Hello One Nation SVG! I am interested in: ' + designName + '.\n\nMy order details:\nGarment size: [please fill in]\nPreferred shirt colour: [please fill in]\nQuantity: [please fill in]\nCustomisation or print notes: [optional]\n\nPlease confirm availability, printing details and the final price before I proceed.';
+      url = 'https://wa.me/17844926777?text=' + encodeURIComponent(message);
+    } else {
+      event.preventDefault();
+      url = control.href;
+    }
+    openAfterTracking(url, events);
   }, true);
 })();
 </script>
