@@ -9,30 +9,86 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Sync Dropbox assets to staging branch
+      - name: Sync approved Dropbox assets in small Worker batches
         env:
           DROPBOX_SYNC_SECRET: ${{ secrets.DROPBOX_SYNC_SECRET }}
         run: |
           set -euo pipefail
-          http_status="$(curl --silent --show-error \
-            --output response.json \
-            --write-out "%{http_code}" \
-            -X POST \
-            -H "Authorization: Bearer ${DROPBOX_SYNC_SECRET}" \
-            -H "Accept: application/json" \
-            "https://onenationsvg.dpdns.org/api/dropbox/sync")"
 
-          echo "Dropbox sync HTTP status: ${http_status}"
-          echo "Dropbox sync response:"
-          cat response.json
-          echo
+          updated_total=0
+          unchanged_total=0
+          gaming_total=0
 
-          if [[ "${http_status}" -lt 200 || "${http_status}" -ge 300 ]]; then
-            echo "Dropbox sync endpoint returned a non-success HTTP status."
+          run_batch() {
+            local batch="$1"
+            local http_status
+
+            http_status="$(curl --silent --show-error \
+              --output response.json \
+              --write-out "%{http_code}" \
+              -X POST \
+              -H "Authorization: Bearer ${DROPBOX_SYNC_SECRET}" \
+              -H "Accept: application/json" \
+              "https://onenationsvg.dpdns.org/api/dropbox/sync?batch=${batch}")"
+
+            echo "Dropbox sync batch ${batch} HTTP status: ${http_status}"
+            cat response.json
+            echo
+
+            if [[ "${http_status}" -lt 200 || "${http_status}" -ge 300 ]]; then
+              echo "Dropbox sync batch ${batch} returned a non-success HTTP status."
+              exit 1
+            fi
+
+            if ! jq -e '.ok == true' response.json >/dev/null; then
+              echo "Dropbox sync batch ${batch} did not report ok=true."
+              exit 1
+            fi
+
+            updated_total=$((updated_total + $(jq -r '.updated' response.json)))
+            unchanged_total=$((unchanged_total + $(jq -r '.unchanged' response.json)))
+            gaming_total=$((gaming_total + $(jq -r '.gaming_files' response.json)))
+          }
+
+          # Batch zero also tells us how many batches the current Dropbox set needs.
+          run_batch 0
+          total_batches="$(jq -r '.total_batches' response.json)"
+          web_ready_files="$(jq -r '.web_ready_files' response.json)"
+          excluded_needs_review="$(jq -r '.excluded_needs_review_variants' response.json)"
+
+          if ! [[ "${total_batches}" =~ ^[1-9][0-9]*$ ]]; then
+            echo "The sync endpoint returned an invalid total_batches value."
             exit 1
           fi
 
-          if ! grep -q '"ok":true' response.json; then
-            echo "Dropbox sync did not report ok=true."
+          if [[ "${total_batches}" -gt 51 ]]; then
+            echo "The sync endpoint requested more than 51 batches; refusing unexpected work."
             exit 1
           fi
+
+          for ((batch=1; batch<total_batches; batch++)); do
+            run_batch "${batch}"
+          done
+
+          expected_total=$((web_ready_files + 10))
+          processed_total=$((updated_total + unchanged_total))
+
+          echo "Dropbox sync final summary:"
+          echo "Approved web-ready files: ${web_ready_files}"
+          echo "Gaming Streetwear files: ${gaming_total}"
+          echo "Needs Review variants excluded: ${excluded_needs_review}"
+          echo "Updated: ${updated_total}"
+          echo "Already unchanged: ${unchanged_total}"
+          echo "Batches completed: ${total_batches}"
+
+          if [[ "${gaming_total}" -ne 10 ]]; then
+            echo "Expected exactly 10 Gaming Streetwear files, found ${gaming_total}."
+            exit 1
+          fi
+
+          if [[ "${processed_total}" -ne "${expected_total}" ]]; then
+            echo "Processed file total does not match the approved source total."
+            exit 1
+          fi
+
+          echo "All approved assets are accounted for on staging/dropbox-assets. Production was not changed."
