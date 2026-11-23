@@ -14,6 +14,7 @@ const APPROVED_CATEGORIES = new Set([
 const MAX_FILES = 300;
 const MAX_FILE_BYTES = 15 * 1024 * 1024;
 const MAX_TOTAL_BYTES = 100 * 1024 * 1024;
+const BATCH_SIZE = 6;
 
 function json(data, status = 200) {
   return Response.json(data, {
