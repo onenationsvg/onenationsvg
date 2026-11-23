@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 240" role="img" aria-labelledby="title desc">
+<title>One Nation S.V.G. logo</title>
+<desc>One Nation S.V.G. wordmark in gold, white and green.</desc>
+<rect width="800" height="240" rx="24" fill="#080b10"/>
+<rect x="0" y="0" width="200" height="10" fill="#f4c542"/>
+<rect x="200" y="0" width="200" height="10" fill="#20984f"/>
+<rect x="400" y="0" width="200" height="10" fill="#167bd0"/>
+<rect x="600" y="0" width="200" height="10" fill="#e5c93b"/>
+<text x="60" y="145" font-family="Arial, Helvetica, sans-serif" font-size="74" font-weight="900" letter-spacing="-2" fill="#f7f5ed">ONE</text>
+<text x="245" y="145" font-family="Arial, Helvetica, sans-serif" font-size="74" font-weight="900" letter-spacing="-2" fill="#f4c542">NATION</text>
+<text x="650" y="145" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="700" fill="#f7f5ed">S.V.G.</text>
+<text x="62" y="188" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" letter-spacing="5" fill="#b2bac4">ONE PEOPLE · ONE CULTURE · ONE NATION</text>
+</svg>
