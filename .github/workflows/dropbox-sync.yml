@@ -2,6 +2,8 @@ name: Dropbox to GitHub asset sync
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "0 10 * * *" # Daily at 10:00 UTC (06:00 in Saint Vincent and the Grenadines)
 
 jobs:
   sync:
