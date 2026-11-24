@@ -24,6 +24,7 @@ EXPECTED_ROUTES = {
     "/contact": "contact.html",
     "/privacy-policy": "privacy-policy.html",
     "/terms": "terms.html",
+    "/ordering-delivery": "ordering-delivery.html",
 }
 SITEMAP_NS = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
 
