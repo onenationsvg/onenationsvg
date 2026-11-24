@@ -20,6 +20,10 @@ EXPECTED_ROUTES = {
     "/holiday-collection": "holiday-collection.html",
     "/svg-culture-island-life": "svg-culture-island-life.html",
     "/copyright": "copyright.html",
+    "/about": "about.html",
+    "/contact": "contact.html",
+    "/privacy-policy": "privacy-policy.html",
+    "/terms": "terms.html",
 }
 SITEMAP_NS = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
 
