@@ -12,7 +12,7 @@
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="One Nation SVG — Vincentian-rooted streetwear, apparel artwork and SVG design work. One people. One culture. One nation.">
+<meta name="description" content="Discover One Nation SVG — Vincentian-inspired clothing, custom T-shirt printing and Caribbean streetwear celebrating Saint Vincent and the Grenadines. One People. One Culture. One Nation.">
 <meta name="theme-color" content="#080b10">
 <title>One Nation SVG | Wear Your Identity</title>
 <style>
@@ -40,6 +40,9 @@ footer{padding:28px 8vw;border-top:1px solid var(--line);display:flex;justify-co
 <meta property="og:site_name" content="OneNation S.V.G.">
 <meta property="og:title" content="One Nation SVG | Wear Your Identity">
 <meta property="og:description" content="One Nation SVG — Vincentian-rooted streetwear, apparel artwork and SVG design work. One people. One culture. One nation.">
+<meta property="og:image" content="https://onenationsvg.dpdns.org/assets/onenation-brand-artwork.jpg">
+<meta property="og:image:alt" content="One Nation SVG — One People, One Culture, One Nation.">
+<meta name="twitter:image" content="https://onenationsvg.dpdns.org/assets/onenation-brand-artwork.jpg">
 <meta property="og:url" content="https://onenationsvg.dpdns.org/">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="One Nation SVG | Wear Your Identity">
@@ -125,7 +128,7 @@ footer{padding:28px 8vw;border-top:1px solid var(--line);display:flex;justify-co
 (function(){
  document.getElementById('year').textContent=new Date().getFullYear();
  const cards=[...document.querySelectorAll('.drop-card')];
- document.querySelectorAll('[data-filter]').forEach(btn=>btn.addEventListener('click',()=>{const f=btn.dataset.filter;document.querySelectorAll('[data-filter]').forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));cards.forEach(card=>card.hidden=!(f==='all'||card.dataset.color===f||(!card.dataset.color&&f==='all')))}));
+ document.querySelectorAll('[data-filter]').forEach(btn=>btn.addEventListener('click',()=>{const f=btn.dataset.filter;document.querySelectorAll('[data-filter]').forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));cards.forEach(card=>{card.hidden=!(f==='all'||card.dataset.color===f)})}));
  const viewer=document.getElementById('imageViewer'),preview=document.getElementById('viewerImage'); let lastTrigger=null;
  function openImage(img){lastTrigger=img;preview.src=img.src;preview.alt=img.alt;viewer.classList.add('open');document.getElementById('closeViewer').focus()}
  function closeImage(){viewer.classList.remove('open');preview.removeAttribute('src');if(lastTrigger){lastTrigger.focus();lastTrigger=null}}
