@@ -47,12 +47,27 @@ footer{padding:28px 8vw;border-top:1px solid var(--line);display:flex;justify-co
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "OneNation S.V.G.",
-  "alternateName": "One Nation SVG",
-  "url": "https://onenationsvg.dpdns.org/",
-  "logo": "https://onenationsvg.dpdns.org/assets/one-nation-logo.svg",
-  "description": "One Nation SVG — Vincentian-rooted streetwear, apparel artwork and SVG design work. One people. One culture. One nation."
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://onenationsvg.dpdns.org/#organization",
+      "name": "OneNation S.V.G.",
+      "alternateName": "One Nation SVG",
+      "url": "https://onenationsvg.dpdns.org/",
+      "logo": "https://onenationsvg.dpdns.org/assets/one-nation-logo.svg",
+      "description": "One Nation SVG — Vincentian-rooted streetwear, apparel artwork and SVG design work. One people. One culture. One nation."
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://onenationsvg.dpdns.org/#website",
+      "url": "https://onenationsvg.dpdns.org/",
+      "name": "One Nation SVG",
+      "publisher": {
+        "@id": "https://onenationsvg.dpdns.org/#organization"
+      },
+      "inLanguage": "en"
+    }
+  ]
 }
 </script>
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
